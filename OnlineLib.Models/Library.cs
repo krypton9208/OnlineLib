@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineLib.App.Models
+namespace OnlineLib.Models
 {
     public class Library
     {
@@ -25,10 +25,14 @@ namespace OnlineLib.App.Models
         public virtual Address _Address { get; set; }
         
         [Display(Name = "Ksiazki: ")]
-        public virtual List<Book> Books { get; set; }
+        public virtual ICollection<Book> Books { get; set; }
 
         [Display(Name = "Pracownicy: ")]
-        public virtual List<ApplicationUser> Workers { get; set; }
+        public virtual ICollection<LibUser> Workers { get; set; }
+
+        [Display(Name = "Czytelnicy: ")]
+        public virtual ICollection<LibUser> Readers { get; set; }
+
 
         [Display(Name = "Tekst: ")]
         [StringLength(1500, MinimumLength = 0)]

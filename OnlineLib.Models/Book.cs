@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OnlineLib.App.Models
+namespace OnlineLib.Models
 {
     public class Book
     {
