@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 //using System.EnterpriseServices;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace OnlineLib.Models
         public DbSet<Address> Address { get; set; }
        // public DbSet<Activity> Activity { get; set; }
        // public DbSet<Settings> Settings { get; set; }
-
+        DbEntityEntry Entry(object entity);
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
