@@ -7,7 +7,7 @@ namespace OnlineLib.Models
     {
         [Key]
         [Display(Name = "Id: ")]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Display(Name = "Tytuł: ")]
         public string Title { get; set; }

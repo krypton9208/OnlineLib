@@ -89,12 +89,22 @@
     <Compile Include="Book.cs" />
     <Compile Include="IdentityModels.cs" />
     <Compile Include="Library.cs" />
+    <Compile Include="Migrations\201511261756565_First.cs" />
+    <Compile Include="Migrations\201511261756565_First.Designer.cs">
+      <DependentUpon>201511261756565_First.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="OnlineLibDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201511261756565_First.resx">
+      <DependentUpon>201511261756565_First.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

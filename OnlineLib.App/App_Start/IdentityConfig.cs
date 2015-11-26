@@ -65,6 +65,23 @@ namespace OnlineLib.App
         {
         }
     }
+
+    public class LibRoleStore : RoleStore<LibRole, Guid, LibUserRole>
+    {
+        public LibRoleStore(OnlineLibDbContext context)
+            : base(context)
+        {
+        }
+    }
+
+    public class LinRoleManager : RoleManager<LibRole, Guid>
+    {
+        public LinRoleManager(IRoleStore<LibRole, Guid> store) : base(store)
+        {
+        }
+    }
+
+
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class LibUserManager : UserManager<LibUser, Guid>
     {

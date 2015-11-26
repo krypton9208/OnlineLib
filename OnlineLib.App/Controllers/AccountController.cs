@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using OnlineLib.App.Models;
+using OnlineLib.Models;
 
 namespace OnlineLib.App.Controllers
 {

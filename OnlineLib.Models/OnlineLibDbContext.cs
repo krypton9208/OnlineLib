@@ -23,10 +23,10 @@ namespace OnlineLib.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new Book());
-            modelBuilder.Configurations.Add(new Library());
-            modelBuilder.Configurations.Add(new Address());
-            modelBuilder.Configurations.Add(new LibUserMap());
+            //modelBuilder.Configurations.Add(new Book());
+            //modelBuilder.Configurations.Add(new Library());
+            //modelBuilder.Configurations.Add(new Address());
+            //modelBuilder.Configurations.Add(new LibUserMap());
           //  modelBuilder.Configurations.Add(new WtUserMap());
           //  modelBuilder.Configurations.Add(new SettingseMap());
 
@@ -39,6 +39,13 @@ namespace OnlineLib.Models
             modelBuilder.Entity<LibRole>()
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Book>()
+                .Property(r => r.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Library>()
+                .Property(r => r.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
 
             base.OnModelCreating(modelBuilder);
         }
