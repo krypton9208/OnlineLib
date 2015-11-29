@@ -54,7 +54,7 @@ namespace OnlineLib.Models
             HasOptional(x => x.Books).WithMany().Map(t => t.MapKey("BooksId")).WillCascadeOnDelete(true);
             HasOptional(x => x.Readers).WithMany().Map(t => t.MapKey("ReadersId")).WillCascadeOnDelete(false);
             HasOptional(x => x.Workers).WithMany().Map(t => t.MapKey("WorkersId")).WillCascadeOnDelete(false);
-
+            ToTable("Library");
         }
     }
 }
