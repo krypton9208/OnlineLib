@@ -13,7 +13,7 @@ namespace OnlineLib.Repository.Repository
     {
         private readonly OnlineLibDbContext _db = new OnlineLibDbContext();
 
-        public ICollection<Book> GetBooks(Guid lib)
+        public ICollection<Book> GetBooks(int lib)
         {
             return _db.Library.First(x => x.Id == lib).Books;
         }
@@ -23,9 +23,9 @@ namespace OnlineLib.Repository.Repository
             return _db.Book.First(x => x.Id == id);
         }
 
-        public bool Add(Book book, Guid lib)
+        public bool Add(Book book, int lib)
         {
-            if (book != null && lib != Guid.Empty)
+            if (book != null && lib != 0)
             {
                 try
                 {
@@ -62,7 +62,7 @@ namespace OnlineLib.Repository.Repository
             return false;
         }
 
-        public bool Remove(Book book, Guid lib)
+        public bool Remove(Book book, int lib)
         {
             if (!book.Lended)
             {

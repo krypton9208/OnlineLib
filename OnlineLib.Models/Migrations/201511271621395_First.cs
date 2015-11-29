@@ -30,7 +30,7 @@ namespace OnlineLib.Models.Migrations
                         Lended = c.Boolean(nullable: false),
                         ISBN = c.String(maxLength: 13),
                         LibUser_Id = c.Guid(),
-                        Library_Id = c.Guid(nullable: false),
+                        Library_Id = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.LibUser_Id)
@@ -42,7 +42,7 @@ namespace OnlineLib.Models.Migrations
                 "dbo.Libraries",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Int(nullable: false, identity: true),
                         Name = c.String(maxLength: 200),
                         Photo = c.Byte(nullable: false),
                         Text = c.String(maxLength: 1500),
@@ -74,8 +74,8 @@ namespace OnlineLib.Models.Migrations
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
                         Adress_Id = c.Guid(),
-                        Library_Id = c.Guid(),
-                        Library_Id1 = c.Guid(),
+                        Library_Id = c.Int(),
+                        Library_Id1 = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Addresses", t => t.Adress_Id)

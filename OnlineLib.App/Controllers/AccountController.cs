@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -10,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using OnlineLib.App.Models;
 using OnlineLib.Models;
+using OnlineLib.Repository.IRepository;
 
 namespace OnlineLib.App.Controllers
 {
@@ -18,15 +20,16 @@ namespace OnlineLib.App.Controllers
     {
         private LibSignInManager _signInManager;
         private LibUserManager _userManager;
+        private readonly ILibraryRepository _libraryRepository;
 
-        public AccountController()
-        {
-        }
+     
+       
 
-        public AccountController(LibUserManager userManager, LibSignInManager signInManager )
+        public AccountController(LibUserManager userManager, LibSignInManager signInManager, ILibraryRepository repo)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _libraryRepository = repo;
         }
 
         public LibSignInManager SignInManager
@@ -35,9 +38,9 @@ namespace OnlineLib.App.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<LibSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -121,7 +124,7 @@ namespace OnlineLib.App.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -137,37 +140,45 @@ namespace OnlineLib.App.Controllers
 
         //
         // GET: /Account/Register
+        [Route("{lib}/Account/Register")]
         [AllowAnonymous]
-        public ActionResult Register()
+        public ActionResult Register(int lib)
         {
+            ViewBag.Library = lib;
             return View();
         }
 
         //
         // POST: /Account/Register
+        [Route("{lib}/Account/Register")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, int lib)
         {
-            if (ModelState.IsValid)
-            {
-                var user = new LibUser() { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
-                }
-                AddErrors(result);
+            var user = new LibUser() { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
+            user.Library = new List<Library>();
+            user.Library.Add(_libraryRepository.GetLibraryById(lib)); 
+            var result = await UserManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                _libraryRepository.AddReaders(lib, user);
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                // Send an email with this link
+                string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.EmailService.SendAsync(new IdentityMessage()
+                    {
+                        Body = "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>",
+                        Destination = user.Email,
+                        Subject = "Confirm your account"
+                    });
+                return RedirectToAction("Index", "Home");
             }
+            AddErrors(result);
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -175,6 +186,7 @@ namespace OnlineLib.App.Controllers
 
         //
         // GET: /Account/ConfirmEmail
+        [Route("Account/ConfirmEmail")]
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(Guid userId, string code)
         {
@@ -412,12 +424,17 @@ namespace OnlineLib.App.Controllers
                 {
                     _userManager.Dispose();
                     _userManager = null;
+                    
                 }
 
                 if (_signInManager != null)
                 {
                     _signInManager.Dispose();
                     _signInManager = null;
+                }
+                if (_libraryRepository != null)
+                {
+                    _libraryRepository.Dispose();
                 }
             }
 

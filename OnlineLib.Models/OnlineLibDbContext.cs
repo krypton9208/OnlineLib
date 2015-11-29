@@ -20,7 +20,10 @@ namespace OnlineLib.Models
         public DbSet<Address> Address { get; set; }
        // public DbSet<Activity> Activity { get; set; }
        // public DbSet<Settings> Settings { get; set; }
-        DbEntityEntry Entry(object entity);
+        DbEntityEntry Entry(object entity)
+        {
+            throw new NotImplementedException();
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

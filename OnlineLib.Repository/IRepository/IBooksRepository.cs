@@ -9,11 +9,11 @@ namespace OnlineLib.Repository.IRepository
 {
     public interface IBooksRepository
     {
-        ICollection<Book> GetBooks(Guid lib);
+        ICollection<Book> GetBooks(int lib);
         Book GetBookById(int id);
-        bool Add(Book book, Guid lib);
+        bool Add(Book book, int lib);
         bool Update(Book book);
-        bool Remove(Book book, Guid lib);
+        bool Remove(Book book, int lib);
         bool SaveChanges();
         bool IsBooked(int id);
         //bool Dispose(bool disposing);

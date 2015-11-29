@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.ModelConfiguration;
 
 namespace OnlineLib.Models
 {
@@ -25,4 +27,23 @@ namespace OnlineLib.Models
         [Display(Name = "W Bibliotece: ")]
         public virtual Library Library { get; set; }
     }
+
+    public class BookMap : EntityTypeConfiguration<Book>
+    {
+        public BookMap()
+        {
+            HasKey(x => x.Id);
+
+            Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            Property(x => x.Title).HasMaxLength(100).IsRequired();
+            Property(x => x.Autor).HasMaxLength(100).IsOptional();
+            Property(x => x.ISBN).HasMaxLength(16).IsOptional();
+            Property(x => x.Lended).IsOptional();
+
+
+            ToTable("Books");
+        }
+    }
+
+
 }

@@ -19,7 +19,7 @@ namespace OnlineLib.App
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public Task  SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
             var mes = new MailMessage();
@@ -44,8 +44,9 @@ namespace OnlineLib.App
                 smtp.Timeout = 500000000;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = credential;
-                return smtp.SendMailAsync(mes);
+                smtp.Send(mes);
             }
+            return Task.FromResult(0);
         }
     }
 

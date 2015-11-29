@@ -8,10 +8,13 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
+using OnlineLib.App.Controllers;
 using OnlineLib.Models;
+using OnlineLib.Repository.IRepository;
+using OnlineLib.Repository.Repository;
 using Owin;
 
-[assembly: OwinStartupAttribute(typeof(OnlineLib.App.Startup))]
+[assembly: OwinStartup(typeof(OnlineLib.App.Startup))]
 namespace OnlineLib.App
 {
     public partial class Startup
@@ -27,11 +30,14 @@ namespace OnlineLib.App
             builder.RegisterType<LibUserManager>().AsSelf().InstancePerRequest();
             builder.RegisterType<LinRoleManager>().AsSelf().InstancePerRequest();
             builder.RegisterType<LibSignInManager>().AsSelf().InstancePerRequest();
-            builder.Register<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
-            builder.Register<IDataProtectionProvider>(c => app.GetDataProtectionProvider()).InstancePerRequest();
-            builder.RegisterType<EmailService>().AsSelf().InstancePerRequest();
+            builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
+            builder.Register(c => app.GetDataProtectionProvider()).InstancePerRequest();
+            builder.RegisterType<LibraryRepository>().As<ILibraryRepository>().InstancePerRequest();
+            builder.RegisterType<BooksRepository>().As<IBooksRepository>().InstancePerRequest();
+            builder.RegisterType<EmailService>().As<IIdentityMessageService>().InstancePerRequest();
 
             // REGISTER CONTROLLERS
+           // builder.RegisterControllers<AccountController>(typeof (ILibraryRepository)).AsSelf().InstancePerRequest();
             builder.RegisterControllers(typeof (MvcApplication).Assembly);
 
             // BUILD CONTAINER
