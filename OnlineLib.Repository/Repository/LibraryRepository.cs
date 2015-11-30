@@ -231,5 +231,10 @@ namespace OnlineLib.Repository.Repository
         public void Dispose()
         {
         }
+
+        public void SaveChanges()
+        {
+            _db.SaveChanges(); 
+        }
     }
 }

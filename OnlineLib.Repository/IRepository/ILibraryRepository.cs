@@ -21,5 +21,6 @@ namespace OnlineLib.Repository.IRepository
         bool AddBook(int lib, Book book);
         bool RemoveBook(int lib, Book book);
         void Dispose();
+        void SaveChanges();
     }
 }

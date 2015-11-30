@@ -14,7 +14,6 @@ using OnlineLib.Repository.IRepository;
 using OnlineLib.Repository.Repository;
 using Owin;
 
-[assembly: OwinStartup(typeof(OnlineLib.App.Startup))]
 namespace OnlineLib.App
 {
     public partial class Startup

@@ -22,15 +22,17 @@ namespace OnlineLib.App.Controllers
         private LibSignInManager _signInManager;
         private LibUserManager _userManager;
         private readonly ILibraryRepository _libraryRepository;
+        private IAuthenticationManager authManager;
 
-     
-       
 
-        public AccountController(LibUserManager userManager, LibSignInManager signInManager, ILibraryRepository repo)
+
+
+        public AccountController(LibUserManager userManager, LibSignInManager signInManager, ILibraryRepository repo, IAuthenticationManager _authentication)
         {
             UserManager = userManager;
             SignInManager = signInManager;
             _libraryRepository = repo;
+            authManager = _authentication;
         }
 
         public LibSignInManager SignInManager
@@ -58,6 +60,7 @@ namespace OnlineLib.App.Controllers
         }
 
         //
+        [Route("Account/Login")]
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -68,6 +71,7 @@ namespace OnlineLib.App.Controllers
 
         //
         // POST: /Account/Login
+        [Route("Account/Login")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -158,17 +162,23 @@ namespace OnlineLib.App.Controllers
         public async Task<ActionResult> Register(RegisterViewModel model, int lib)
         {
 
-            var user = new LibUser() { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
-           // if (user.Library == null)
-            //user.Library = new List<Library>();
-            //user.Library.Add(_libraryRepository.GetLibraryById(lib)); 
+            var user = new LibUser()
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                Name = model.Name,
+                Surname = model.Surname
+            };
            
             var result = await UserManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                _libraryRepository.AddReaders(lib, user);
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
+                _libraryRepository.GetLibraryById(lib).Owner = user;
+                _libraryRepository.SaveChanges();
+                 if (user.Libraries == null)
+                user.Libraries = new List<Library>();
+                user.Libraries.Add(_libraryRepository.GetLibraryById(lib));
+                _userManager.Update(user);
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

@@ -17,7 +17,7 @@ namespace OnlineLib.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public virtual Address Adress { get; set; }
-        public virtual ICollection<Library> Library { get; set; }
+        public virtual ICollection<Library> Libraries { get; set; }
         public virtual ICollection<Book> BookedBooks { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<LibUser, Guid> manager)
@@ -34,18 +34,18 @@ namespace OnlineLib.Models
     {
         public LibUserMap()
         {
-            //HasKey(x => x.Id);
+            HasKey(x => x.Id);
 
-            //Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            //Property(x => x.Name).IsRequired().HasMaxLength(30).HasColumnName("Imie: ");
-            //Property(x => x.Surname).IsRequired().HasMaxLength(30).HasColumnName("Nazwisko: ");
-            //Property(x => x.Email).IsRequired().HasMaxLength(40).HasColumnName("Email: ");
+            Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            Property(x => x.Name).IsRequired().HasMaxLength(30).HasColumnName("Imie: ");
+            Property(x => x.Surname).IsRequired().HasMaxLength(30).HasColumnName("Nazwisko: ");
+            Property(x => x.Email).IsRequired().HasMaxLength(40).HasColumnName("Email: ");
 
-            //HasOptional(x=>x.BookedBooks).WithMany().Map(t=>t.MapKey("BookedBooks")).WillCascadeOnDelete(true);
-            //HasOptional(x=>x.Library).WithMany().Map(t=>t.MapKey("Library")).WillCascadeOnDelete(false);
+            HasOptional(x => x.BookedBooks).WithMany().Map(t => t.MapKey("BookedBooks")).WillCascadeOnDelete(true);
+            HasOptional(x => x.Libraries).WithMany( ).Map(t => t.MapKey("Library")).WillCascadeOnDelete(false);
 
 
-            //ToTable("LibUser");
+            ToTable("LibUser");
 
         }
     }

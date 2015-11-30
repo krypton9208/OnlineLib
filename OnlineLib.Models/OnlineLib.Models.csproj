@@ -89,9 +89,9 @@
     <Compile Include="Book.cs" />
     <Compile Include="IdentityModels.cs" />
     <Compile Include="Library.cs" />
-    <Compile Include="Migrations\201511301143245_First.cs" />
-    <Compile Include="Migrations\201511301143245_First.Designer.cs">
-      <DependentUpon>201511301143245_First.cs</DependentUpon>
+    <Compile Include="Migrations\201511301210065_First.cs" />
+    <Compile Include="Migrations\201511301210065_First.Designer.cs">
+      <DependentUpon>201511301210065_First.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="OnlineLibDbContext.cs" />
@@ -102,8 +102,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201511301143245_First.resx">
-      <DependentUpon>201511301143245_First.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201511301210065_First.resx">
+      <DependentUpon>201511301210065_First.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

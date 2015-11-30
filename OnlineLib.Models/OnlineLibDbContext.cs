@@ -30,7 +30,7 @@ namespace OnlineLib.Models
         {
             modelBuilder.Configurations.Add(new BookMap());
             modelBuilder.Configurations.Add(new LibraryMap());
-           // modelBuilder.Configurations.Add(new LibUserMap());
+            modelBuilder.Configurations.Add(new LibUserMap());
             //modelBuilder.Configurations.Add(new LibUserMap());
           //  modelBuilder.Configurations.Add(new WtUserMap());
           //  modelBuilder.Configurations.Add(new SettingseMap());
@@ -42,12 +42,6 @@ namespace OnlineLib.Models
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<LibRole>()
-                .Property(r => r.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<Book>()
-                .Property(r => r.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<Library>()
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
