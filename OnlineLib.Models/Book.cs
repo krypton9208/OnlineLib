@@ -12,12 +12,13 @@ namespace OnlineLib.Models
         public string Autor { get; set; }
         public bool Lended { get; set; }
         public string Isbn { get; set; }
+        public int LibraryId { get; set; }
         public virtual Library Library { get; set; }
     }
 
-    public class BookMap : EntityTypeConfiguration<Book>
+    public class BookConfiguration : EntityTypeConfiguration<Book>
     {
-        public BookMap()
+        public BookConfiguration()
         {
             HasKey(x => x.Id);
 
@@ -26,7 +27,7 @@ namespace OnlineLib.Models
             Property(x => x.Autor).HasMaxLength(100).IsOptional();
             Property(x => x.Isbn).HasMaxLength(16).IsOptional();
             Property(x => x.Lended).IsOptional();
-
+            HasRequired(x => x.Library).WithMany(t => t.Books).HasForeignKey(g => g.LibraryId);
             ToTable("Books");
         }
     }

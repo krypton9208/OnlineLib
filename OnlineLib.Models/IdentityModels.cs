@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
 
 namespace OnlineLib.Models
 {
@@ -16,9 +17,12 @@ namespace OnlineLib.Models
         
         public string Name { get; set; }
         public string Surname { get; set; }
+
+        public Guid AdresId { get; set; }
         public virtual Address Adress { get; set; }
-        public virtual ICollection<Library> Libraries { get; set; }
+        public virtual int Libraries { get; set; }
         public virtual ICollection<Book> BookedBooks { get; set; }
+
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<LibUser, Guid> manager)
         {
@@ -30,9 +34,9 @@ namespace OnlineLib.Models
         
     }
 
-    public class LibUserMap : EntityTypeConfiguration<LibUser>
+    public class LibUserConfiguration : EntityTypeConfiguration<LibUser>
     {
-        public LibUserMap()
+        internal LibUserConfiguration()
         {
             HasKey(x => x.Id);
 
@@ -41,8 +45,9 @@ namespace OnlineLib.Models
             Property(x => x.Surname).IsRequired().HasMaxLength(30).HasColumnName("Nazwisko: ");
             Property(x => x.Email).IsRequired().HasMaxLength(40).HasColumnName("Email: ");
 
-            HasOptional(x => x.BookedBooks).WithMany().Map(t => t.MapKey("BookedBooks")).WillCascadeOnDelete(true);
-            HasOptional(x => x.Libraries).WithMany( ).Map(t => t.MapKey("Library")).WillCascadeOnDelete(false);
+
+
+            HasRequired(x => x.Adress).WithMany().HasForeignKey(u => u.AdresId).WillCascadeOnDelete(true);
 
 
             ToTable("LibUser");

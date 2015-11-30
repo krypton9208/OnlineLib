@@ -32,6 +32,7 @@ namespace OnlineLib.Models.Migrations
                p => p.Name,
                new LibRole() { Name = "Admin", Id = Guid.NewGuid() },
                new LibRole() { Name = "LibOwners", Id = Guid.NewGuid() },
+               new LibRole() { Name = "Main_Workers", Id = Guid.NewGuid() },
                new LibRole() { Name = "Workers", Id = Guid.NewGuid() },
                new LibRole() { Name = "Readers", Id = Guid.NewGuid() }
                );

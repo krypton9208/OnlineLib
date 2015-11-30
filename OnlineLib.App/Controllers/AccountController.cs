@@ -145,21 +145,23 @@ namespace OnlineLib.App.Controllers
 
         //
         // GET: /Account/Register
-        [Route("{lib}/Account/Register")]
+        [Route("{lib}/Account/Register/{owner}/{worker}")]
         [AllowAnonymous]
-        public ActionResult Register(int lib)
+        public ActionResult Register(int lib, bool owner, bool worker)
         {
             ViewBag.Library = lib;
+            ViewBag.Worker = worker;
+            ViewBag.Owner = owner;
             return View();
         }
 
         //
         // POST: /Account/Register
-        [Route("{lib}/Account/Register")]
+        [Route("{lib}/Account/Register/{owner}/{worker}")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model, int lib)
+        public async Task<ActionResult> Register(RegisterViewModel model, int lib, bool? owner,bool?  worker)
         {
 
             var user = new LibUser()
@@ -173,12 +175,17 @@ namespace OnlineLib.App.Controllers
             var result = await UserManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                _libraryRepository.GetLibraryById(lib).Owner = user;
-                _libraryRepository.SaveChanges();
-                 if (user.Libraries == null)
-                user.Libraries = new List<Library>();
-                user.Libraries.Add(_libraryRepository.GetLibraryById(lib));
-                _userManager.Update(user);
+                user.Libraries = lib;
+                if (owner == true && worker == false)
+                user.Roles.Add(new LibUserRole() {UserId = user.Id, RoleId = Guid.Parse("c73fbac5-af97-e511-80d2-000c2990a869") });
+                if (worker == true && owner == false)
+                    user.Roles.Add(new LibUserRole() { UserId = user.Id, RoleId = Guid.Parse("c63fbac5-af97-e511-80d2-000c2990a869") });
+                if (owner ==false && worker == false)
+                    user.Roles.Add(new LibUserRole() { UserId = user.Id, RoleId = Guid.Parse("c93fbac5-af97-e511-80d2-000c2990a869") });
+                await UserManager.UpdateAsync(user);
+                //user.Roles = 
+                // user.Libraries = new List<Library>();
+                //user.Libraries.Add(_libraryRepository.GetLibraryById(lib));
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

@@ -6,6 +6,7 @@ using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Owin.Security.OAuth;
 
 namespace OnlineLib.Models
 {
@@ -14,17 +15,41 @@ namespace OnlineLib.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Photo { get; set; }
-        public virtual LibUser Owner { get; set; }
+        public Guid AdresId { get; set; }
         public virtual Address Address { get; set; }
-        public virtual List<Book> Books { get; set; }
-        public virtual List<LibUser> Workers { get; set; }
-        public virtual List<LibUser> Readers { get; set; }
+        public virtual ICollection<Book> Books { get; set; }
+        public virtual Guid LibUsers { get; set; }
         public string Text { get; set; }
     }
 
-    public class LibraryMap : EntityTypeConfiguration<Library>
+    public class LibraryLibUser
     {
-        public LibraryMap()
+        public int LibraryId { get; set; }
+        public Guid LibUserId { get; set; }
+
+        public Library Library { get; set; }
+        public LibUser LibUser { get; set; }
+
+        public LibraryLibUser(Library library, LibUser libUser)
+        {
+            LibraryId = library.Id;
+            LibUserId = libUser.Id;
+        }
+    }
+
+    public class LibraryLibUserConfiguration : EntityTypeConfiguration<LibraryLibUser>
+    {
+        public LibraryLibUserConfiguration()
+        {
+            HasKey(x => new {x.LibraryId, x.LibUserId });
+            HasRequired(x => x.Library).WithMany().HasForeignKey(x => x.LibraryId);
+            HasRequired(x => x.LibUser).WithMany().HasForeignKey(x => x.LibUserId);
+        }
+    }
+
+    public class LibraryConfiguration : EntityTypeConfiguration<Library>
+    {
+        public LibraryConfiguration()
         {
             HasKey(x => x.Id);
 
@@ -32,14 +57,10 @@ namespace OnlineLib.Models
             Property(x => x.Name).IsRequired().HasMaxLength(200).HasColumnName("Nazwa: ");
             Property(x => x.Photo).IsOptional().HasMaxLength(200).HasColumnName("Zdjęcie: ");
             Property(x => x.Text).IsOptional().HasMaxLength(1500).HasColumnName("Tekst: ");
-
-
-            HasOptional(x => x.Address);
-            HasOptional(x => x.Owner);
-
-            HasOptional(x => x.Books).WithMany().Map(t => t.MapKey("BooksId")).WillCascadeOnDelete(true);
-            HasOptional(x => x.Readers).WithMany().Map(t => t.MapKey("ReadersId")).WillCascadeOnDelete(false);
-            HasOptional(x => x.Workers).WithMany().Map(t => t.MapKey("WorkersId")).WillCascadeOnDelete(false);
+            
+            
+            HasRequired(x => x.Address).WithMany().HasForeignKey(t => t.AdresId);
+            
             ToTable("Library");
         }
     }

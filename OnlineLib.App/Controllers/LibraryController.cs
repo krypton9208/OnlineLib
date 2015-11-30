@@ -48,7 +48,7 @@ namespace OnlineLib.App.Controllers
                 if (_libraryRepository.AddLibrary(library))
                 {
                     int idlib = _libraryRepository.GetLibraryByName(library.Name).Id;
-                    return RedirectToActionPermanent("Register", "Account", new {lib = idlib});
+                    return RedirectToActionPermanent("Register", "Account", new {lib = idlib, owner = true, worker = false});
                 }
             }
             catch (Exception)

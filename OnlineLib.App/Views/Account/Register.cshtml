@@ -12,7 +12,9 @@
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
 
-    <input type="hidden" id="lib" name="lib" value="@ViewBag.Library" />
+    <input type="hidden" id="lib" name="lib" value="@ViewBag.Library"/>
+    <input type="hidden" id="worker" name="worker"  value="@ViewBag.Worker"/>
+    <input type="hidden" id="owner" name="owner" value="@ViewBag.Owner" />
     <div class="form-group">
         @Html.LabelFor(m => m.Name, new {@class = "col-md-2 control-label"})
         <div class="col-md-10">

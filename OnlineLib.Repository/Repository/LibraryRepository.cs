@@ -87,17 +87,13 @@ namespace OnlineLib.Repository.Repository
             return false;
         }
 
-        public ICollection<LibUser> GetEmployees(int lib)
-        {
-            Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-            return firstOrDefault?.Workers;
-        }
+        //public ICollection<LibUser> GetEmployees(int lib)
+        //{
+        //    Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
+        //    return firstOrDefault?.Workers;
+        //}
 
-        public ICollection<LibUser> GetReaders(int lib)
-        {
-            Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-            return firstOrDefault?.Readers;
-        }
+        
 
 
         public ICollection<Book> GetAllBooks(int lib)
@@ -111,8 +107,8 @@ namespace OnlineLib.Repository.Repository
             if (lib > 0 && employee != null)
             {
                 Library firstOrDefault = _db.Library.FirstOrDefault(x=>x.Id == lib);
-                if (firstOrDefault?.Workers == null) firstOrDefault.Workers = new List<LibUser>();
-                firstOrDefault?.Workers.Add(employee);
+              //  if (firstOrDefault?.Workers == null) firstOrDefault.Workers = new List<LibUser>();
+              //  firstOrDefault?.Workers.Add(employee);
                 try
                 {
                     _db.SaveChanges();
@@ -132,7 +128,7 @@ namespace OnlineLib.Repository.Repository
             if (lib > 0 && employee != null)
             {
                 Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                firstOrDefault?.Workers.Remove(employee);
+                //firstOrDefault?.Workers.Remove(employee);
                 try
                 {
                     _db.SaveChanges();
@@ -152,8 +148,8 @@ namespace OnlineLib.Repository.Repository
             if (lib > 0 && readers != null)
             {
                 Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                if (firstOrDefault?.Readers == null) firstOrDefault.Readers = new List<LibUser>();
-                firstOrDefault?.Readers.Add(readers);
+               // if (firstOrDefault?.Readers == null) firstOrDefault.Readers = new List<LibUser>();
+                //firstOrDefault?.Readers.Add(readers);
                 try
                 {
                     _db.SaveChanges();
@@ -173,7 +169,7 @@ namespace OnlineLib.Repository.Repository
             if (lib > 0 && readers != null)
             {
                 Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                firstOrDefault?.Readers.Remove(readers);
+               // firstOrDefault?.Readers.Remove(readers);
                 try
                 {
                     _db.SaveChanges();
