@@ -18,6 +18,7 @@ namespace OnlineLib.Models
         public DbSet<Book> Book { get; set; }
         public DbSet<Library> Library { get; set; }
         public DbSet<Address> Address { get; set; }
+        //public DbSet<LibUser> LibUser { get; set; }
        // public DbSet<Activity> Activity { get; set; }
        // public DbSet<Settings> Settings { get; set; }
         DbEntityEntry Entry(object entity)
@@ -27,9 +28,9 @@ namespace OnlineLib.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.Configurations.Add(new Book());
-            //modelBuilder.Configurations.Add(new Library());
-            //modelBuilder.Configurations.Add(new Address());
+            modelBuilder.Configurations.Add(new BookMap());
+            modelBuilder.Configurations.Add(new LibraryMap());
+           // modelBuilder.Configurations.Add(new LibUserMap());
             //modelBuilder.Configurations.Add(new LibUserMap());
           //  modelBuilder.Configurations.Add(new WtUserMap());
           //  modelBuilder.Configurations.Add(new SettingseMap());

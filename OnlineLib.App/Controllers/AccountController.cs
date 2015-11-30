@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -158,8 +159,10 @@ namespace OnlineLib.App.Controllers
         {
 
             var user = new LibUser() { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
-            user.Library = new List<Library>();
-            user.Library.Add(_libraryRepository.GetLibraryById(lib)); 
+           // if (user.Library == null)
+            //user.Library = new List<Library>();
+            //user.Library.Add(_libraryRepository.GetLibraryById(lib)); 
+           
             var result = await UserManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {

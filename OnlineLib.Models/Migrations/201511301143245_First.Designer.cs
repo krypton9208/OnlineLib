@@ -13,7 +13,7 @@ namespace OnlineLib.Models.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201511271621395_First"; }
+            get { return "201511301143245_First"; }
         }
         
         string IMigrationMetadata.Source

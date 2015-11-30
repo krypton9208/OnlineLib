@@ -111,6 +111,7 @@ namespace OnlineLib.Repository.Repository
             if (lib > 0 && employee != null)
             {
                 Library firstOrDefault = _db.Library.FirstOrDefault(x=>x.Id == lib);
+                if (firstOrDefault?.Workers == null) firstOrDefault.Workers = new List<LibUser>();
                 firstOrDefault?.Workers.Add(employee);
                 try
                 {
@@ -151,6 +152,7 @@ namespace OnlineLib.Repository.Repository
             if (lib > 0 && readers != null)
             {
                 Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
+                if (firstOrDefault?.Readers == null) firstOrDefault.Readers = new List<LibUser>();
                 firstOrDefault?.Readers.Add(readers);
                 try
                 {

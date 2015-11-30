@@ -12,30 +12,13 @@ namespace OnlineLib.Models
     public class Library
     {
         public int Id { get; set; }
-
-        [StringLength(200, ErrorMessage = "Nazwa biblioteki musi mieć wiecej niż 5 znaków." ,MinimumLength = 5)]
         public string Name { get; set; }
-
-        [Display(Name = "Zdjęcie: ")]
         public string Photo { get; set; }
-
-        public LibUser Owner { get; set; }
-
-        [Display(Name = "Adress: ")]
-        public virtual Address _Address { get; set; }
-        
-        [Display(Name = "Ksiazki: ")]
-        public virtual ICollection<Book> Books { get; set; }
-
-        [Display(Name = "Pracownicy: ")]
-        public virtual ICollection<LibUser> Workers { get; set; }
-
-        [Display(Name = "Czytelnicy: ")]
-        public virtual ICollection<LibUser> Readers { get; set; }
-
-
-        [Display(Name = "Tekst: ")]
-        [StringLength(1500, MinimumLength = 0)]
+        public virtual LibUser Owner { get; set; }
+        public virtual Address Address { get; set; }
+        public virtual List<Book> Books { get; set; }
+        public virtual List<LibUser> Workers { get; set; }
+        public virtual List<LibUser> Readers { get; set; }
         public string Text { get; set; }
     }
 
@@ -49,7 +32,10 @@ namespace OnlineLib.Models
             Property(x => x.Name).IsRequired().HasMaxLength(200).HasColumnName("Nazwa: ");
             Property(x => x.Photo).IsOptional().HasMaxLength(200).HasColumnName("Zdjęcie: ");
             Property(x => x.Text).IsOptional().HasMaxLength(1500).HasColumnName("Tekst: ");
-            //Property(x => x.Owner).IsOptional().HasColumnName("Owner: ");
+
+
+            HasOptional(x => x.Address);
+            HasOptional(x => x.Owner);
 
             HasOptional(x => x.Books).WithMany().Map(t => t.MapKey("BooksId")).WillCascadeOnDelete(true);
             HasOptional(x => x.Readers).WithMany().Map(t => t.MapKey("ReadersId")).WillCascadeOnDelete(false);
