@@ -6,6 +6,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+Web.config
 
 # Build results
 [Dd]ebug/
@@ -229,3 +230,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+OnlineLib.App/Web.config
+OnlineLib.App/Web.config
