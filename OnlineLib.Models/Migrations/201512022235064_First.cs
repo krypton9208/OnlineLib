@@ -17,11 +17,26 @@ namespace OnlineLib.Models.Migrations
                         Street = c.String(),
                         Number = c.String(),
                         PostCode = c.String(),
-                        LibUserId = c.Guid(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Books",
+                c => new
+                    {
+                        Id = c.Int(name: "Id: ", nullable: false, identity: true),
+                        Title = c.String(name: "Title: ", nullable: false, maxLength: 100),
+                        Author = c.String(name: "Author: ", maxLength: 100),
+                        Lended = c.Boolean(name: "Lended: "),
+                        Isbn = c.String(name: "Isbn: ", maxLength: 16),
+                        LibraryId = c.Int(),
+                        BorrowerGuid = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Id)
-                .Index(t => t.Id);
+                .ForeignKey("dbo.Library", t => t.LibraryId)
+                .ForeignKey("dbo.AspNetUsers", t => t.BorrowerGuid)
+                .Index(t => t.LibraryId)
+                .Index(t => t.BorrowerGuid);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -42,27 +57,25 @@ namespace OnlineLib.Models.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
+                        Adress_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
+                .ForeignKey("dbo.Addresses", t => t.Adress_Id)
+                .Index(t => t.UserName, unique: true, name: "UserNameIndex")
+                .Index(t => t.Adress_Id);
             
             CreateTable(
-                "dbo.Books",
+                "dbo.AspNetUserClaims",
                 c => new
                     {
-                        Id = c.Int(name: "Id: ", nullable: false, identity: true),
-                        Title = c.String(name: "Title: ", nullable: false, maxLength: 100),
-                        Author = c.String(name: "Author: ", maxLength: 100),
-                        Lended = c.Boolean(name: "Lended: "),
-                        Isbn = c.String(name: "Isbn: ", maxLength: 16),
-                        LibraryId = c.Int(),
-                        BorrowerGuid = c.Guid(),
+                        Id = c.Int(nullable: false, identity: true),
+                        UserId = c.Guid(nullable: false),
+                        ClaimType = c.String(),
+                        ClaimValue = c.String(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.BorrowerGuid)
-                .ForeignKey("dbo.Library", t => t.LibraryId)
-                .Index(t => t.LibraryId)
-                .Index(t => t.BorrowerGuid);
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId);
             
             CreateTable(
                 "dbo.Library",
@@ -77,34 +90,6 @@ namespace OnlineLib.Models.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Addresses", t => t.AdresId, cascadeDelete: true)
                 .Index(t => t.AdresId);
-            
-            CreateTable(
-                "dbo.LibUserLibrary",
-                c => new
-                    {
-                        LibUserId = c.Guid(nullable: false),
-                        LibraryId = c.Int(nullable: false),
-                        Library = c.Int(nullable: false),
-                        LibUser = c.Guid(nullable: false),
-                    })
-                .PrimaryKey(t => new { t.LibUserId, t.LibraryId })
-                .ForeignKey("dbo.Library", t => t.Library, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.LibUser, cascadeDelete: true)
-                .Index(t => t.Library)
-                .Index(t => t.LibUser);
-            
-            CreateTable(
-                "dbo.AspNetUserClaims",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        UserId = c.Guid(nullable: false),
-                        ClaimType = c.String(),
-                        ClaimValue = c.String(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
-                .Index(t => t.UserId);
             
             CreateTable(
                 "dbo.AspNetUserLogins",
@@ -141,40 +126,53 @@ namespace OnlineLib.Models.Migrations
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
+            CreateTable(
+                "dbo.LibUserLibrary",
+                c => new
+                    {
+                        LibUser_Id = c.Guid(nullable: false),
+                        Library_Id = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.LibUser_Id, t.Library_Id })
+                .ForeignKey("dbo.AspNetUsers", t => t.LibUser_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Library", t => t.Library_Id, cascadeDelete: true)
+                .Index(t => t.LibUser_Id)
+                .Index(t => t.Library_Id);
+            
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.Books", "BorrowerGuid", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.LibUserLibrary", "LibUser", "dbo.AspNetUsers");
-            DropForeignKey("dbo.LibUserLibrary", "Library", "dbo.Library");
+            DropForeignKey("dbo.LibUserLibrary", "Library_Id", "dbo.Library");
+            DropForeignKey("dbo.LibUserLibrary", "LibUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Books", "LibraryId", "dbo.Library");
             DropForeignKey("dbo.Library", "AdresId", "dbo.Addresses");
-            DropForeignKey("dbo.Books", "BorrowerGuid", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Addresses", "Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUsers", "Adress_Id", "dbo.Addresses");
+            DropIndex("dbo.LibUserLibrary", new[] { "Library_Id" });
+            DropIndex("dbo.LibUserLibrary", new[] { "LibUser_Id" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
-            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.LibUserLibrary", new[] { "LibUser" });
-            DropIndex("dbo.LibUserLibrary", new[] { "Library" });
             DropIndex("dbo.Library", new[] { "AdresId" });
+            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.AspNetUsers", new[] { "Adress_Id" });
+            DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.Books", new[] { "BorrowerGuid" });
             DropIndex("dbo.Books", new[] { "LibraryId" });
-            DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.Addresses", new[] { "Id" });
+            DropTable("dbo.LibUserLibrary");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
-            DropTable("dbo.AspNetUserClaims");
-            DropTable("dbo.LibUserLibrary");
             DropTable("dbo.Library");
-            DropTable("dbo.Books");
+            DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
+            DropTable("dbo.Books");
             DropTable("dbo.Addresses");
         }
     }

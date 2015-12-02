@@ -37,13 +37,9 @@ namespace OnlineLib.Repository.Repository
         {
             if (library != null)
             {
-                _db.Address.Add(library.Address);
-                _db.SaveChanges();
-                library.AdresId = _db.Address.Find(library.Address).Id;
+                library.LibUsers.Add(id);
                 _db.Library.Add(library);
-                _db.SaveChanges();
-                var d = new LibUserLibrary { LibUser = id, Library = library };
-                _db.LibUserLibrary.Add(d);
+
                 try
                 {
                     _db.SaveChanges();

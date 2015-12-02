@@ -250,6 +250,7 @@ namespace OnlineLib.App.Controllers
 
         //
         // GET: /Account/ResetPassword
+        [Route("Account/ResetPassword")]
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
@@ -258,6 +259,7 @@ namespace OnlineLib.App.Controllers
 
         //
         // POST: /Account/ResetPassword
+        [Route("Account/ResetPassword")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -284,6 +286,8 @@ namespace OnlineLib.App.Controllers
 
         //
         // GET: /Account/ResetPasswordConfirmation
+
+        [Route("Account/ResetPasswordConfirmation")]
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
@@ -406,6 +410,7 @@ namespace OnlineLib.App.Controllers
 
         //
         // POST: /Account/LogOff
+        [Route("Account/LogOff")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()

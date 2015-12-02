@@ -13,8 +13,7 @@ namespace OnlineLib.Models
         public string Street { get; set; }
         public string Number { get; set; }
         public string PostCode { get; set; }
-        public Guid LibUserId { get; set; }
-        public virtual LibUser LibUser { get; set; }
+        
     }
 
     public class AddresConfiguration : EntityTypeConfiguration<Address>

@@ -20,12 +20,12 @@ namespace OnlineLib.Models
 
         public Guid AdresId { get; set; }
         public virtual Address Adress { get; set; }
-        public virtual ICollection<LibUserLibrary>LibUserLibraries { get; set; }
+        public virtual ICollection<Library> Libraries { get; set; }
         public virtual ICollection<Book> BookedBooks { get; set; }
 
         public LibUser()
         {
-            LibUserLibraries = new HashSet<LibUserLibrary>();
+            Libraries = new HashSet<Library>();
             BookedBooks = new HashSet<Book>();
         }
 
@@ -50,15 +50,14 @@ namespace OnlineLib.Models
             Property(x => x.Name).IsRequired().HasMaxLength(30).HasColumnName("Imie: ");
             Property(x => x.Surname).IsRequired().HasMaxLength(30).HasColumnName("Nazwisko: ");
             Property(x => x.Email).IsRequired().HasMaxLength(40).HasColumnName("Email: ");
-            //HasMany(x => x.Libraries).WithMany(t => t.LibUsers).Map(ul =>
-            //{
-            //    ul.MapLeftKey("LibUser_Id");
-            //    ul.MapRightKey("Library_Id");
-            //    ul.ToTable("LibUserLibrary");
-            //});
+            HasMany<Library>(x => x.Libraries).WithMany(t => t.LibUsers).Map(ul =>
+            {
+                ul.MapLeftKey("LibUser_Id"); 
+                ul.MapRightKey("Library_Id");
+                ul.ToTable("LibUserLibrary");
+            });
 
-            HasOptional(x => x.Adress).WithRequired(t => t.LibUser);
-
+            HasOptional(x => x.Adress);
             ToTable("LibUser");
 
         }

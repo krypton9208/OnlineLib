@@ -11,10 +11,15 @@ namespace OnlineLib.App.Controllers
     {
         private readonly IBooksRepository _booksRepository;
         // GET: Books
+        public BooksController(IBooksRepository _repository)
+        {
+            _booksRepository = _repository;
+        }
+
         [Route("{lib}/Books")]
         public ActionResult Index(int lib)
         {
-            
+            ViewBag.Library(lib);
             return View(_booksRepository.GetBooks(lib));
         }
     }

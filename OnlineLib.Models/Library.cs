@@ -18,13 +18,13 @@ namespace OnlineLib.Models
         public Guid AdresId { get; set; }
         public virtual Address Address { get; set; }
         public virtual ICollection<Book> Books { get; set; }
-        public virtual ICollection<LibUserLibrary>LibUserLibraries { get; set; }
+        public virtual ICollection<LibUser> LibUsers { get; set; }
         public string Text { get; set; }
 
         public Library()
         {
             Books = new HashSet<Book>();
-            LibUserLibraries = new HashSet<LibUserLibrary>();
+            LibUsers = new HashSet<LibUser>();
         }
 
     }
@@ -42,7 +42,7 @@ namespace OnlineLib.Models
             Property(x => x.AdresId).IsOptional();
 
             HasMany(x => x.Books).WithOptional(d => d.Library).HasForeignKey(t => t.LibraryId);
-            HasOptional(x => x.LibUserLibraries);
+            HasOptional(x => x.LibUsers);
             HasOptional(x => x.Address).WithMany().HasForeignKey(t => t.AdresId).WillCascadeOnDelete(true);
             
             ToTable("Library");

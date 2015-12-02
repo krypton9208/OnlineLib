@@ -27,11 +27,11 @@ namespace OnlineLib.Repository.Repository
         {
             if (book != null && lib != 0)
             {
+                _db.Book.Add(book);
+                _db.Library.First(x => x.Id == lib).Books.Add(book);
                 try
                 {
-
-                    _db.Book.Add(book);
-                    _db.Library.First(x => x.Id == lib).Books.Add(_db.Book.Find(book));
+                    
                     _db.SaveChanges();
                 }
                 catch (Exception)
