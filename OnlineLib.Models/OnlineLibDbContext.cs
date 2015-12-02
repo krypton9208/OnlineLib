@@ -19,37 +19,23 @@ namespace OnlineLib.Models
         public DbSet<Book> Book { get; set; }
         public DbSet<Library> Library { get; set; }
         public DbSet<Address> Address { get; set; }
-        public DbSet<LibraryLibUser> LibraryLibUser { get; set; }
-        //public DbSet<LibUserRole> LibUserRole { get; set; }
-        //public DbSet<LibUser> LibUser { get; set; }
-       // public DbSet<Activity> Activity { get; set; }
-       // public DbSet<Settings> Settings { get; set; }
-        DbEntityEntry Entry(object entity)
-        {
-            throw new NotImplementedException();
-        }
+        public DbSet<LibUserLibrary> LibUserLibrary { get; set; }
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new BookConfiguration());
             modelBuilder.Configurations.Add(new LibraryConfiguration());
             modelBuilder.Configurations.Add(new LibUserConfiguration());
-            modelBuilder.Configurations.Add(new LibraryLibUserConfiguration());
-            //modelBuilder.Configurations.Add(new LibUserMap());
-          //  modelBuilder.Configurations.Add(new WtUserMap());
-          //  modelBuilder.Configurations.Add(new SettingseMap());
-
-            modelBuilder.Entity<LibUser>()
-                .Property(r => r.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            modelBuilder.Configurations.Add(new LibUserLibraryConfiguration());
+          
             modelBuilder.Entity<LibClaim>()
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             modelBuilder.Entity<LibRole>()
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            //modelBuilder.Entity<Library>().HasRequired(x => x.Address).WithMany().HasForeignKey(t => t.Address);
-            //modelBuilder.Entity<Library>().HasRequired(x => x.Owner).WithMany().HasForeignKey(t => t.Owner);
+
 
             base.OnModelCreating(modelBuilder);
         }

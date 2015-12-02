@@ -18,35 +18,17 @@ namespace OnlineLib.Models
         public Guid AdresId { get; set; }
         public virtual Address Address { get; set; }
         public virtual ICollection<Book> Books { get; set; }
-        public virtual Guid LibUsers { get; set; }
+        public virtual ICollection<LibUserLibrary>LibUserLibraries { get; set; }
         public string Text { get; set; }
-    }
 
-    public class LibraryLibUser
-    {
-        public int LibraryId { get; set; }
-        public Guid LibUserId { get; set; }
-
-        public Library Library { get; set; }
-        public LibUser LibUser { get; set; }
-
-        public LibraryLibUser(Library library, LibUser libUser)
+        public Library()
         {
-            LibraryId = library.Id;
-            LibUserId = libUser.Id;
+            Books = new HashSet<Book>();
+            LibUserLibraries = new HashSet<LibUserLibrary>();
         }
-    }
 
-    public class LibraryLibUserConfiguration : EntityTypeConfiguration<LibraryLibUser>
-    {
-        public LibraryLibUserConfiguration()
-        {
-            HasKey(x => new {x.LibraryId, x.LibUserId });
-            HasRequired(x => x.Library).WithMany().HasForeignKey(x => x.LibraryId);
-            HasRequired(x => x.LibUser).WithMany().HasForeignKey(x => x.LibUserId);
-        }
     }
-
+    
     public class LibraryConfiguration : EntityTypeConfiguration<Library>
     {
         public LibraryConfiguration()
@@ -57,9 +39,11 @@ namespace OnlineLib.Models
             Property(x => x.Name).IsRequired().HasMaxLength(200).HasColumnName("Nazwa: ");
             Property(x => x.Photo).IsOptional().HasMaxLength(200).HasColumnName("Zdjęcie: ");
             Property(x => x.Text).IsOptional().HasMaxLength(1500).HasColumnName("Tekst: ");
-            
-            
-            HasRequired(x => x.Address).WithMany().HasForeignKey(t => t.AdresId);
+            Property(x => x.AdresId).IsOptional();
+
+            HasMany(x => x.Books).WithOptional(d => d.Library).HasForeignKey(t => t.LibraryId);
+            HasOptional(x => x.LibUserLibraries);
+            HasOptional(x => x.Address).WithMany().HasForeignKey(t => t.AdresId).WillCascadeOnDelete(true);
             
             ToTable("Library");
         }

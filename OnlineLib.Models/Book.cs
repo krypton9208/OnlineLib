@@ -14,6 +14,9 @@ namespace OnlineLib.Models
         public string Isbn { get; set; }
         public int LibraryId { get; set; }
         public virtual Library Library { get; set; }
+
+        public Guid BorrowerGuid { get; set; }
+        public virtual LibUser Borrower { get; set; }
     }
 
     public class BookConfiguration : EntityTypeConfiguration<Book>
@@ -22,12 +25,15 @@ namespace OnlineLib.Models
         {
             HasKey(x => x.Id);
 
-            Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            Property(x => x.Title).HasMaxLength(100).IsRequired();
-            Property(x => x.Autor).HasMaxLength(100).IsOptional();
-            Property(x => x.Isbn).HasMaxLength(16).IsOptional();
-            Property(x => x.Lended).IsOptional();
-            HasRequired(x => x.Library).WithMany(t => t.Books).HasForeignKey(g => g.LibraryId);
+            Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity).HasColumnName("Id: ");
+            Property(x => x.Title).HasMaxLength(100).IsRequired().HasColumnName("Title: ");
+            Property(x => x.Autor).HasMaxLength(100).IsOptional().HasColumnName("Author: ");
+            Property(x => x.Isbn).HasMaxLength(16).IsOptional().HasColumnName("Isbn: ");
+            Property(x => x.Lended).IsOptional().HasColumnName("Lended: ");
+            Property(x => x.BorrowerGuid).IsOptional();
+            Property(x => x.LibraryId).IsOptional();
+            HasOptional(x => x.Borrower).WithMany(t => t.BookedBooks).HasForeignKey(d => d.BorrowerGuid);
+
             ToTable("Books");
         }
     }

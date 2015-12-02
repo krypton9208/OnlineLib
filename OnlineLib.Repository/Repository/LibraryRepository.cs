@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace OnlineLib.Repository.Repository
             _db = db;
         }
 
+        public LibUser GetUserByGuid(Guid id) => _db.Users.First(x => x.Id == id);
+
         public ICollection<Library> GetLibraryList => _db.Library.ToList();
 
         public Library GetLibraryById(int id)
@@ -30,11 +33,17 @@ namespace OnlineLib.Repository.Repository
             return _db.Library.FirstOrDefault(x => x.Name == name);
         }
 
-        public bool AddLibrary(Library library)
+        public bool AddLibrary(Library library, LibUser id)
         {
             if (library != null)
             {
+                _db.Address.Add(library.Address);
+                _db.SaveChanges();
+                library.AdresId = _db.Address.Find(library.Address).Id;
                 _db.Library.Add(library);
+                _db.SaveChanges();
+                var d = new LibUserLibrary { LibUser = id, Library = library };
+                _db.LibUserLibrary.Add(d);
                 try
                 {
                     _db.SaveChanges();
@@ -93,7 +102,7 @@ namespace OnlineLib.Repository.Repository
         //    return firstOrDefault?.Workers;
         //}
 
-        
+
 
 
         public ICollection<Book> GetAllBooks(int lib)
@@ -106,9 +115,9 @@ namespace OnlineLib.Repository.Repository
         {
             if (lib > 0 && employee != null)
             {
-                Library firstOrDefault = _db.Library.FirstOrDefault(x=>x.Id == lib);
-              //  if (firstOrDefault?.Workers == null) firstOrDefault.Workers = new List<LibUser>();
-              //  firstOrDefault?.Workers.Add(employee);
+                Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
+                //  if (firstOrDefault?.Workers == null) firstOrDefault.Workers = new List<LibUser>();
+                //  firstOrDefault?.Workers.Add(employee);
                 try
                 {
                     _db.SaveChanges();
@@ -148,7 +157,7 @@ namespace OnlineLib.Repository.Repository
             if (lib > 0 && readers != null)
             {
                 Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-               // if (firstOrDefault?.Readers == null) firstOrDefault.Readers = new List<LibUser>();
+                // if (firstOrDefault?.Readers == null) firstOrDefault.Readers = new List<LibUser>();
                 //firstOrDefault?.Readers.Add(readers);
                 try
                 {
@@ -169,7 +178,7 @@ namespace OnlineLib.Repository.Repository
             if (lib > 0 && readers != null)
             {
                 Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-               // firstOrDefault?.Readers.Remove(readers);
+                // firstOrDefault?.Readers.Remove(readers);
                 try
                 {
                     _db.SaveChanges();
@@ -230,7 +239,7 @@ namespace OnlineLib.Repository.Repository
 
         public void SaveChanges()
         {
-            _db.SaveChanges(); 
+            _db.SaveChanges();
         }
     }
 }

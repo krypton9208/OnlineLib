@@ -20,10 +20,16 @@ namespace OnlineLib.Models
 
         public Guid AdresId { get; set; }
         public virtual Address Adress { get; set; }
-        public virtual int Libraries { get; set; }
+        public virtual ICollection<LibUserLibrary>LibUserLibraries { get; set; }
         public virtual ICollection<Book> BookedBooks { get; set; }
 
+        public LibUser()
+        {
+            LibUserLibraries = new HashSet<LibUserLibrary>();
+            BookedBooks = new HashSet<Book>();
+        }
 
+        
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<LibUser, Guid> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -44,11 +50,14 @@ namespace OnlineLib.Models
             Property(x => x.Name).IsRequired().HasMaxLength(30).HasColumnName("Imie: ");
             Property(x => x.Surname).IsRequired().HasMaxLength(30).HasColumnName("Nazwisko: ");
             Property(x => x.Email).IsRequired().HasMaxLength(40).HasColumnName("Email: ");
+            //HasMany(x => x.Libraries).WithMany(t => t.LibUsers).Map(ul =>
+            //{
+            //    ul.MapLeftKey("LibUser_Id");
+            //    ul.MapRightKey("Library_Id");
+            //    ul.ToTable("LibUserLibrary");
+            //});
 
-
-
-            HasRequired(x => x.Adress).WithMany().HasForeignKey(u => u.AdresId).WillCascadeOnDelete(true);
-
+            HasOptional(x => x.Adress).WithRequired(t => t.LibUser);
 
             ToTable("LibUser");
 

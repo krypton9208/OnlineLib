@@ -17,38 +17,46 @@ namespace OnlineLib.App.Controllers
     {
         private readonly ILibraryRepository _libraryRepository;
 
+
         public LibraryController(ILibraryRepository _repo)
         {
-
             _libraryRepository = _repo;
         }
         // GET: Library
-        [Route("Library/Create")]
-        public ActionResult Create()
+        [Route("Library/Create/{id}")]
+        public ActionResult Create(Guid id)
         {
+            ViewBag.User_Id = id;
             return View();
         }
 
-        [Route("Library/Create")]
+        [Route("Library/Create/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Library library, HttpPostedFileBase file)
+        public ActionResult Create(Library library, HttpPostedFileBase file, Guid id)
         {
             
             string fileName = Path.GetFileName(file.FileName);
             if (fileName != null)
             {
-                var path = Path.Combine(Server.MapPath("~/Image"), fileName);
+                var path = Path.Combine(Server.MapPath("~/Image"), library.Name+".jpg");
 
                 file.SaveAs(path);
             }
-            library.Photo = fileName;
+            library.Address = new Address()
+            {
+                City = library.Address.City,
+                Contry = library.Address.Contry,
+                PostCode = library.Address.PostCode,
+                Street = library.Address.Street,
+                Number = library.Address.Number
+            };
+            library.Photo = library.Name + ".jpg";
             try
             {
-                if (_libraryRepository.AddLibrary(library))
+                if (_libraryRepository.AddLibrary(library,_libraryRepository.GetUserByGuid(id) ))
                 {
-                    int idlib = _libraryRepository.GetLibraryByName(library.Name).Id;
-                    return RedirectToActionPermanent("Register", "Account", new {lib = idlib, owner = true, worker = false});
+                    return RedirectToActionPermanent("Index", "Home");
                 }
             }
             catch (Exception)
