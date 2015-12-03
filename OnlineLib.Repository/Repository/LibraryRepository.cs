@@ -33,13 +33,33 @@ namespace OnlineLib.Repository.Repository
             return _db.Library.FirstOrDefault(x => x.Name == name);
         }
 
+        public Guid GetUserGuidByEmail(string email) => _db.Users.First(x => x.Email == email).Id;
+
+        public bool RemoveUserFromLibrary(int idlib, Guid iduser)
+        {
+            var library = _db.Library.First(x => x.Id == idlib);
+            library.LibUsers.Remove(_db.Users.First(x => x.Id == iduser));
+            _db.Users.First(x => x.Id == iduser).Libraries.Remove(library);
+            try
+            {
+                _db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+            return true;
+        }
+
         public bool AddLibrary(Library library, LibUser id)
         {
             if (library != null)
             {
                 library.LibUsers.Add(id);
+                id.Libraries.Add(library);
+                _db.Users.AddOrUpdate(id);
                 _db.Library.Add(library);
-
                 try
                 {
                     _db.SaveChanges();

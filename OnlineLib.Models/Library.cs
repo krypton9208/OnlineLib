@@ -15,7 +15,6 @@ namespace OnlineLib.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Photo { get; set; }
-        public Guid AdresId { get; set; }
         public virtual Address Address { get; set; }
         public virtual ICollection<Book> Books { get; set; }
         public virtual ICollection<LibUser> LibUsers { get; set; }
@@ -39,11 +38,10 @@ namespace OnlineLib.Models
             Property(x => x.Name).IsRequired().HasMaxLength(200).HasColumnName("Nazwa: ");
             Property(x => x.Photo).IsOptional().HasMaxLength(200).HasColumnName("Zdjęcie: ");
             Property(x => x.Text).IsOptional().HasMaxLength(1500).HasColumnName("Tekst: ");
-            Property(x => x.AdresId).IsOptional();
 
             HasMany(x => x.Books).WithOptional(d => d.Library).HasForeignKey(t => t.LibraryId);
             HasOptional(x => x.LibUsers);
-            HasOptional(x => x.Address).WithMany().HasForeignKey(t => t.AdresId).WillCascadeOnDelete(true);
+            HasOptional(x => x.Address).WithRequired(x => x.Library);
             
             ToTable("Library");
         }

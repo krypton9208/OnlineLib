@@ -9,6 +9,7 @@ using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
 using System.Collections.Generic;
 using System.Web.Routing;
+using Microsoft.AspNet.Identity;
 
 
 namespace OnlineLib.App.Controllers
@@ -23,10 +24,13 @@ namespace OnlineLib.App.Controllers
             _libraryRepository = _repo;
         }
         // GET: Library
-        [Route("Library/Create/{id}")]
-        public ActionResult Create(Guid id)
+        [Authorize]
+        [HttpGet]
+        [Route("Library/Create/{id:Guid?}")]
+        public ActionResult Create(Guid? id)
         {
-            ViewBag.User_Id = id;
+            ViewBag.User_Id = User.Identity.GetUserId();
+            if (id == null) return RedirectToAction("Create", new {@id = ViewBag.User_Id});
             return View();
         }
 
@@ -36,26 +40,27 @@ namespace OnlineLib.App.Controllers
         public ActionResult Create(Library library, HttpPostedFileBase file, Guid id)
         {
             
-            string fileName = Path.GetFileName(file.FileName);
-            if (fileName != null)
+            
+            if (file.FileName != null)
             {
-                var path = Path.Combine(Server.MapPath("~/Image"), library.Name+".jpg");
+                library.Photo = library.Name + ".jpg";
 
-                file.SaveAs(path);
             }
             library.Address = new Address()
-            {
-                City = library.Address.City,
+                {
+                    City = library.Address.City,
                 Contry = library.Address.Contry,
                 PostCode = library.Address.PostCode,
                 Street = library.Address.Street,
                 Number = library.Address.Number
             };
-            library.Photo = library.Name + ".jpg";
             try
             {
                 if (_libraryRepository.AddLibrary(library,_libraryRepository.GetUserByGuid(id) ))
                 {
+                    string fileName = Path.GetFileName(file.FileName);
+                var path = Path.Combine(Server.MapPath("~/Image"), library.Name+".jpg");
+                file.SaveAs(path);
                     return RedirectToActionPermanent("Index", "Home");
                 }
             }

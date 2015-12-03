@@ -10,7 +10,9 @@ namespace OnlineLib.Repository.IRepository
         LibUser GetUserByGuid(Guid id);
         Library GetLibraryById(int id);
         Library GetLibraryByName(string name);
+        bool RemoveUserFromLibrary(int idlib, Guid iduser);
         bool AddLibrary(Library library, LibUser id);
+        Guid GetUserGuidByEmail(string email);
         bool UpdateLibrary(Library library);
         bool RemoveLibrary(Library library);
         ICollection<Book> GetAllBooks(int lib);

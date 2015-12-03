@@ -25,10 +25,6 @@ namespace OnlineLib.App.Controllers
         private IAuthenticationManager authManager;
 
 
-        public AccountController(LibUserManager userManager)
-        {
-            UserManager = userManager;
-        }
 
         public AccountController(LibUserManager userManager, LibSignInManager signInManager, ILibraryRepository repo, IAuthenticationManager _authentication)
         {
@@ -60,6 +56,23 @@ namespace OnlineLib.App.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        [Route("Account/LibraryManager")]
+        [Authorize]
+        public ActionResult LibraryManager()
+        {
+
+            return View(_libraryRepository.GetUserByGuid(Guid.Parse(User.Identity.GetUserId())).Libraries);
+        }
+
+        [Route("Account/DeleteLibrary")]
+        public ActionResult DeleteLibrary(int? id)
+        {
+            if (id != null)
+                if (_libraryRepository.RemoveUserFromLibrary((int) id, Guid.Parse(User.Identity.GetUserId())))
+                    return RedirectToAction("LibraryManager");
+            return View("Error");
         }
 
         //
@@ -152,7 +165,7 @@ namespace OnlineLib.App.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            
+
             return View();
         }
 
@@ -177,12 +190,12 @@ namespace OnlineLib.App.Controllers
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 await UserManager.EmailService.SendAsync(new IdentityMessage()
-                    {
-                        Body = "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>",
-                        Destination = user.Email,
-                        Subject = "Confirm your account"
-                    });
-                return RedirectToAction("Create", "Library", new {@id = user.Id});
+                {
+                    Body = "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>",
+                    Destination = user.Email,
+                    Subject = "Confirm your account"
+                });
+                return RedirectToAction("Index", "Home");
             }
             AddErrors(result);
 
@@ -435,7 +448,7 @@ namespace OnlineLib.App.Controllers
                 {
                     _userManager.Dispose();
                     _userManager = null;
-                    
+
                 }
 
                 if (_signInManager != null)
