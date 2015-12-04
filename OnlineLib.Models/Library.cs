@@ -38,11 +38,8 @@ namespace OnlineLib.Models
             Property(x => x.Name).IsRequired().HasMaxLength(200).HasColumnName("Nazwa: ");
             Property(x => x.Photo).IsOptional().HasMaxLength(200).HasColumnName("Zdjęcie: ");
             Property(x => x.Text).IsOptional().HasMaxLength(1500).HasColumnName("Tekst: ");
-
-            HasMany(x => x.Books).WithOptional(d => d.Library).HasForeignKey(t => t.LibraryId);
             HasOptional(x => x.LibUsers);
             HasOptional(x => x.Address).WithRequired(x => x.Library);
-            
             ToTable("Library");
         }
     }

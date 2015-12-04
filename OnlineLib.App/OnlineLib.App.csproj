@@ -192,6 +192,7 @@
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LibraryController.cs" />
+    <Compile Include="Controllers\LoansController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -261,10 +262,14 @@
     <Content Include="Views\Books\Index.cshtml" />
     <Content Include="Views\Library\Create.cshtml" />
     <Content Include="Views\Account\LibraryManager.cshtml" />
+    <Content Include="Views\Books\Add.cshtml" />
+    <Content Include="Views\Books\Edit.cshtml" />
+    <Content Include="Views\Books\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Image\" />
+    <Folder Include="Views\Loans\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -303,6 +308,8 @@
           <DevelopmentServerPort>50056</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:50056/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:50056/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

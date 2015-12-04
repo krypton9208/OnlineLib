@@ -59,9 +59,11 @@
   <ItemGroup>
     <Compile Include="IRepository\IBooksRepository.cs" />
     <Compile Include="IRepository\ILibraryRepository.cs" />
+    <Compile Include="IRepository\ILoanActivityRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\BooksRepository.cs" />
     <Compile Include="Repository\LibraryRepository.cs" />
+    <Compile Include="Repository\LoanActivityRepository.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

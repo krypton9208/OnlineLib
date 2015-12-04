@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
-using System.Collections.Generic;
-using System.Web.Routing;
 using Microsoft.AspNet.Identity;
 
 
@@ -30,7 +25,7 @@ namespace OnlineLib.App.Controllers
         public ActionResult Create(Guid? id)
         {
             ViewBag.User_Id = User.Identity.GetUserId();
-            if (id == null) return RedirectToAction("Create", new {@id = ViewBag.User_Id});
+            if (id == null) return RedirectToAction("Create", new { @id = ViewBag.User_Id });
             return View();
         }
 
@@ -39,16 +34,16 @@ namespace OnlineLib.App.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Library library, HttpPostedFileBase file, Guid id)
         {
-            
-            
+
+
             if (file.FileName != null)
             {
                 library.Photo = library.Name + ".jpg";
 
             }
             library.Address = new Address()
-                {
-                    City = library.Address.City,
+            {
+                City = library.Address.City,
                 Contry = library.Address.Contry,
                 PostCode = library.Address.PostCode,
                 Street = library.Address.Street,
@@ -56,11 +51,11 @@ namespace OnlineLib.App.Controllers
             };
             try
             {
-                if (_libraryRepository.AddLibrary(library,_libraryRepository.GetUserByGuid(id) ))
+                if (_libraryRepository.AddLibrary(library, _libraryRepository.GetUserByGuid(id)))
                 {
                     string fileName = Path.GetFileName(file.FileName);
-                var path = Path.Combine(Server.MapPath("~/Image"), library.Name+".jpg");
-                file.SaveAs(path);
+                    var path = Path.Combine(Server.MapPath("~/Image"), library.Name + ".jpg");
+                    file.SaveAs(path);
                     return RedirectToActionPermanent("Index", "Home");
                 }
             }

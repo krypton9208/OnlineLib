@@ -21,12 +21,12 @@ namespace OnlineLib.Models
         public Guid AdresId { get; set; }
         public virtual Address Adress { get; set; }
         public virtual ICollection<Library> Libraries { get; set; }
-        public virtual ICollection<Book> BookedBooks { get; set; }
+        public virtual ICollection<LoanActivity> BookedBooks { get; set; }
 
         public LibUser()
         {
             Libraries = new HashSet<Library>();
-            BookedBooks = new HashSet<Book>();
+            BookedBooks = new HashSet<LoanActivity>();
         }
 
         
@@ -56,7 +56,7 @@ namespace OnlineLib.Models
                 ul.MapRightKey("Library_Id");
                 ul.ToTable("LibUserLibrary");
             });
-
+            
             HasOptional(x => x.Adress);
             ToTable("LibUser");
 

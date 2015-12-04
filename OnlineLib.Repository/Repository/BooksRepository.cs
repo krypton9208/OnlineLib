@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,11 +28,10 @@ namespace OnlineLib.Repository.Repository
         {
             if (book != null && lib != 0)
             {
+                book.Library = _db.Library.First(x => x.Id == lib);
                 _db.Book.Add(book);
-                _db.Library.First(x => x.Id == lib).Books.Add(book);
                 try
                 {
-                    
                     _db.SaveChanges();
                 }
                 catch (Exception)
@@ -47,7 +47,13 @@ namespace OnlineLib.Repository.Repository
         {
             if (book != null)
             {
-                _db.Entry(book).State = EntityState.Modified;
+                var dd = _db.Book.First(x => x.Id == book.Id);
+                dd.Autor = book.Autor;
+                dd.Title = book.Title;
+                dd.Isbn = book.Isbn;
+                dd.Lended = book.Lended;
+                dd.LoadActivity = book.LoadActivity;
+                _db.Entry(dd).State = EntityState.Modified;
                 try
                 {
                     _db.SaveChanges();
@@ -66,8 +72,9 @@ namespace OnlineLib.Repository.Repository
         {
             if (!book.Lended)
             {
-                _db.Library.First(x => x.Id == lib).Books.Remove(book);
-                _db.Book.Remove(book);
+                var d = _db.Book.First(x => x.Id == book.Id);
+                _db.Library.First(x => x.Id == lib).Books.Remove(d);
+                _db.Book.Remove(d);
                 try
                 {
                     _db.SaveChanges();
