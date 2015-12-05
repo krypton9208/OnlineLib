@@ -28,9 +28,9 @@ namespace OnlineLib.Models
         {
             HasKey(x => x.Id);
             Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            Property(x => x.LoanData).IsRequired();
-            Property(x => x.ScheduledReturnData).IsRequired();
-            Property(x => x.ReturnedData).IsOptional();
+            Property(x => x.LoanData).HasColumnType("datetime2").IsRequired();
+            Property(x => x.ScheduledReturnData).HasColumnType("datetime2").IsRequired();
+            Property(x => x.ReturnedData).HasColumnType("datetime2").IsOptional();
             Property(x => x.Returned).IsOptional();
             Property(x => x.Text).IsOptional().HasMaxLength(150);
             HasRequired(x => x.LibUser).WithMany(x => x.BookedBooks).Map(e => e.MapKey("LibUserId"));

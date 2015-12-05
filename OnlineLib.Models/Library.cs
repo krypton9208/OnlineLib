@@ -18,6 +18,7 @@ namespace OnlineLib.Models
         public virtual Address Address { get; set; }
         public virtual ICollection<Book> Books { get; set; }
         public virtual ICollection<LibUser> LibUsers { get; set; }
+        [DataType(DataType.MultilineText)]
         public string Text { get; set; }
 
         public Library()

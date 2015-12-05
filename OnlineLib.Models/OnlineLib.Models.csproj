@@ -94,6 +94,10 @@
     <Compile Include="Migrations\201512041045507_First.Designer.cs">
       <DependentUpon>201512041045507_First.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201512051202470_Second.cs" />
+    <Compile Include="Migrations\201512051202470_Second.Designer.cs">
+      <DependentUpon>201512051202470_Second.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="OnlineLibDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,6 +109,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201512041045507_First.resx">
       <DependentUpon>201512041045507_First.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512051202470_Second.resx">
+      <DependentUpon>201512051202470_Second.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

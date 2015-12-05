@@ -52,6 +52,7 @@ namespace OnlineLib.App.Controllers
 
         //
         // GET: /Manage/Index
+        [Route("Manage/Index")]
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -213,6 +214,7 @@ namespace OnlineLib.App.Controllers
 
         //
         // GET: /Manage/ChangePassword
+        [Route("Manage/ChangePassword")]
         public ActionResult ChangePassword()
         {
             return View();
@@ -222,6 +224,7 @@ namespace OnlineLib.App.Controllers
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Manage/ChangePassword")]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -244,6 +247,8 @@ namespace OnlineLib.App.Controllers
 
         //
         // GET: /Manage/SetPassword
+        [Route("Manage/SetPassword")]
+
         public ActionResult SetPassword()
         {
             return View();
@@ -253,6 +258,7 @@ namespace OnlineLib.App.Controllers
         // POST: /Manage/SetPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Manage/SetPassword")]
         public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
         {
             if (ModelState.IsValid)

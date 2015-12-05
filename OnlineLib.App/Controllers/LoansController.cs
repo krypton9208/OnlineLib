@@ -3,15 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using OnlineLib.Repository.IRepository;
 
 namespace OnlineLib.App.Controllers
 {
+    [Authorize]
     public class LoansController : Controller
     {
-        // GET: Loans
+        private readonly ILoanActivityRepository _loanActivityRepository;
 
-        public ActionResult Index()
+        public LoansController(ILoanActivityRepository _repo)
         {
+            _loanActivityRepository = _repo;
+        }
+        // GET: Loans
+        [Route("{lib}/Loans/NewLoan")]
+        
+        public ActionResult NewLoan(int lib)
+        {
+            ViewBag.Library = lib;
+            return View();
+        }
+
+        [Route("{lib}/Loans/NewLoan")]
+        [HttpPost]
+        public ActionResult NewLoan(int lib, int bookid, Guid libUserGuid)
+        {
+            if (lib != 0 && bookid != 0 && libUserGuid != Guid.Empty)
+            {
+                if (_loanActivityRepository.NewLoad(libUserGuid, bookid))
+                {
+                    return RedirectToAction("Index", "Books", new {@lib = lib});
+                }
+                return View();
+            }
+                return View();
+        }
+
+        [Route("{lib}/Loans/ReturnBook")]
+        public ActionResult ReturnBook(int lib)
+        {
+            ViewBag.Library = lib;
+            return View();
+        }
+
+        [Route("{lib}/Loans/ReturnBook")]
+        [HttpPost]
+        public ActionResult ReturnBook(int lib, int bookid, Guid libUserGuid)
+        {
+            if (lib != 0 && bookid != 0 && libUserGuid != Guid.Empty)
+            {
+                if (_loanActivityRepository.ReturnLoad(libUserGuid, bookid))
+                {
+                    return RedirectToAction("Index", "Books", new { @lib = lib });
+                }
+                return View();
+            }
             return View();
         }
     }

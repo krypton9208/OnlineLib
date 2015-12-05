@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OnlineLib.App")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("OnlineLib")]
+[assembly: AssemblyDescription("DataBase aplication form small Libraries")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OnlineLib.App")]
+[assembly: AssemblyCompany("DevKrypt")]
+[assembly: AssemblyProduct("OnlineLib")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyCulture("PL")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

@@ -265,11 +265,12 @@
     <Content Include="Views\Books\Add.cshtml" />
     <Content Include="Views\Books\Edit.cshtml" />
     <Content Include="Views\Books\Delete.cshtml" />
+    <Content Include="Views\Loans\NewLoan.cshtml" />
+    <Content Include="Views\Loans\ReturnBook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Image\" />
-    <Folder Include="Views\Loans\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
