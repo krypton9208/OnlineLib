@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using OnlineLib.Models;
@@ -64,6 +65,20 @@ namespace OnlineLib.App.Controllers
                 return View(library);
             }
             return View(library);
+        }
+
+        [Route("Library/Search")]
+        public ActionResult Search(string search)
+        {
+            if (search == string.Empty || search == null)
+                return View(_libraryRepository.GetLibraryList);
+            else
+                return
+                    View(
+                        _libraryRepository.GetLibraryList.Where(
+                            x =>
+                                x.Name.Contains(search) || x.Address.City.Contains(search) ||
+                                x.Address.Street.Contains(search)));
         }
 
 

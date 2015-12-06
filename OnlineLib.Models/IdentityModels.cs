@@ -68,6 +68,7 @@ namespace OnlineLib.Models
 
     public class LibUserRole : IdentityUserRole<Guid>
     {
+        public virtual Library WorkPlace { get; set; }
     }
 
     public class LibLogin : IdentityUserLogin<Guid>
@@ -75,5 +76,9 @@ namespace OnlineLib.Models
     }
     public class LibRole : IdentityRole<Guid, LibUserRole>
     {
+        public LibRole()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

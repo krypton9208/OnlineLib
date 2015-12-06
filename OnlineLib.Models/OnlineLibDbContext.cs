@@ -34,8 +34,10 @@ namespace OnlineLib.Models
             modelBuilder.Entity<LibRole>()
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
-
+            modelBuilder.Entity<LibUserRole>()
+                .HasOptional(x => x.WorkPlace)
+                .WithMany(x => x.Workers)
+                .Map(d => d.MapKey("Library"));
             base.OnModelCreating(modelBuilder);
         }
 

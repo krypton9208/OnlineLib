@@ -1,0 +1,48 @@
+﻿@model IEnumerable<OnlineLib.Models.Library>
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (@Html.BeginForm())
+{
+    <div class="row">
+        <p>
+            Search: @Html.Editor("Search")
+            <button type="submit" class="btn btn-primary">Search</button>
+        </p>
+    </div>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address.City)
+        </th>
+        <th @Html.DisplayNameFor(model => model.Address.Street)>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address.Street)
+            </td>
+        </tr>
+    }
+</table>

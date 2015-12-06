@@ -4,7 +4,7 @@
     ViewBag.Title = "LibraryManager";
 }
 
-<h2>LibraryManager</h2>
+<h2>User libraries</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -26,7 +26,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+           @Html.ActionLink( item.Name,"Index", "Books", new { lib = item.Id}, null)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Photo)

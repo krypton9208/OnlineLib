@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using OnlineLib.Repository.IRepository;
 
 namespace OnlineLib.App.Controllers
@@ -21,8 +22,13 @@ namespace OnlineLib.App.Controllers
         
         public ActionResult NewLoan(int lib)
         {
-            ViewBag.Library = lib;
-            return View();
+            if (_loanActivityRepository.CanUserLoansBooks(Guid.Parse(User.Identity.GetUserId()), lib))
+            {
+                ViewBag.Library = lib;
+                return View();
+            }
+            return View("Error");
+
         }
 
         [Route("{lib}/Loans/NewLoan")]

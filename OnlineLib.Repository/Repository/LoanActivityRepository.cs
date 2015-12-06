@@ -18,6 +18,25 @@ namespace OnlineLib.Repository.Repository
             _db = db;
         }
 
+        public bool CanUserLoansBooks(Guid user, int lib)
+        {
+            var o = _db.Roles.First(x => x.Name == "LibOwners").Id;
+            var w = _db.Roles.First(x => x.Name == "Workers").Id;
+            var m = _db.Roles.First(x => x.Name == "Main_Workers").Id;
+            var h = _db.Users.First(x => x.Id == user);
+            List<LibUserRole> k = h.Roles.Where(x => x.WorkPlace.Id == lib).ToList();
+            if (k.Count >= 0)
+            {
+                foreach (LibUserRole libUserRole in k)
+                {
+                    if ((libUserRole.RoleId == w) || (libUserRole.RoleId == m) || (libUserRole.RoleId == o))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+
         public bool NewLoad(Guid libUserGuid, int bookid)
         {
             if (libUserGuid != Guid.Empty && bookid != 0)

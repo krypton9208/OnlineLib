@@ -18,6 +18,7 @@ namespace OnlineLib.Models
         public virtual Address Address { get; set; }
         public virtual ICollection<Book> Books { get; set; }
         public virtual ICollection<LibUser> LibUsers { get; set; }
+        public virtual ICollection<LibUserRole> Workers { get; set; }
         [DataType(DataType.MultilineText)]
         public string Text { get; set; }
 
@@ -25,6 +26,7 @@ namespace OnlineLib.Models
         {
             Books = new HashSet<Book>();
             LibUsers = new HashSet<LibUser>();
+            Workers = new HashSet<LibUserRole>();
         }
 
     }
@@ -40,6 +42,7 @@ namespace OnlineLib.Models
             Property(x => x.Photo).IsOptional().HasMaxLength(200).HasColumnName("Zdjęcie: ");
             Property(x => x.Text).IsOptional().HasMaxLength(1500).HasColumnName("Tekst: ");
             HasOptional(x => x.LibUsers);
+            HasOptional(x => x.Workers);
             HasOptional(x => x.Address).WithRequired(x => x.Library);
             ToTable("Library");
         }

@@ -1,3 +1,4 @@
+using System.Net.Sockets;
 using Microsoft.Owin.Security.DataProtection;
 
 namespace OnlineLib.Models.Migrations
@@ -30,12 +31,13 @@ namespace OnlineLib.Models.Migrations
             //
             context.Roles.AddOrUpdate(
                p => p.Name,
-               new LibRole() { Name = "Admin", Id = Guid.NewGuid() },
-               new LibRole() { Name = "LibOwners", Id = Guid.NewGuid() },
-               new LibRole() { Name = "Main_Workers", Id = Guid.NewGuid() },
-               new LibRole() { Name = "Workers", Id = Guid.NewGuid() },
-               new LibRole() { Name = "Readers", Id = Guid.NewGuid() }
+               new LibRole() { Name = "Admin" },
+               new LibRole() { Name = "LibOwners" },
+               new LibRole() { Name = "Main_Workers" },
+               new LibRole() { Name = "Workers" },
+               new LibRole() { Name = "Readers"}
                );
         }
+
     }
 }

@@ -12,6 +12,7 @@ namespace OnlineLib.Repository.IRepository
         bool NewLoad(Guid libUserGuid, int bookid);
         bool ReturnLoad(Guid libUserGuid, int bookid);
         bool ExtendSheduledReturnData(Guid libUserGuid, int bookid);
+        bool CanUserLoansBooks(Guid user, int lib);
 
     }
 }

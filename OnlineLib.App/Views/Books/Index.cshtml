@@ -41,7 +41,9 @@
             @Html.DisplayFor(modelItem => item.Isbn)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+            @Html.ActionLink("Drukuj", "PdfGeneratorBook", new { id = item.Id }) |
+
             @Html.ActionLink("Delete", "Delete", new { id=item.Id })
         </td>
     </tr>
