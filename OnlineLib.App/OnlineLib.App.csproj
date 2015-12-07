@@ -272,6 +272,7 @@
     <Content Include="Views\Loans\NewLoan.cshtml" />
     <Content Include="Views\Loans\ReturnBook.cshtml" />
     <Content Include="Views\Library\Search.cshtml" />
+    <Content Include="Views\Library\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,70 @@
+﻿@model OnlineLib.Models.Library
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<div>
+    <hr/>
+    <h2>@Html.DisplayFor(model => model.Name)</h2>
+    <img src="../../Image/@Model.Photo" width="300" />
+    @Html.ActionLink("Subscribe", "SubscribeLibrary", new object { }, new { @lib = Model.Id, @class = "btn btn-primary btn-lg" })
+
+    
+    <div class=" dl-horizontal col-lg-offset-1">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address.Contry)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.Contry)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Address.PostCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.PostCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address.Street)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.Street)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address.Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.Number)
+        </dd>
+
+       
+
+    </div>
+
+
+        <hr/>
+    <div>
+        @Html.DisplayFor(model => model.Text)
+    </div>
+
+
+    </dl>
+</div>
+

@@ -18,6 +18,7 @@ namespace OnlineLib.Repository.IRepository
         ICollection<Book> GetAllBooks(int lib);
         bool AddBook(int lib, Book book);
         bool RemoveBook(int lib, Book book);
+        bool Subscribe(int lib, Guid id);
         void Dispose();
         void SaveChanges();
     }

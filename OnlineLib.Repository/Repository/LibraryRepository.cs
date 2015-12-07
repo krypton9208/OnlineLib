@@ -39,7 +39,12 @@ namespace OnlineLib.Repository.Repository
         {
             var library = _db.Library.First(x => x.Id == idlib);
             library.LibUsers.Remove(_db.Users.First(x => x.Id == iduser));
-            _db.Users.First(x => x.Id == iduser).Libraries.Remove(library);
+            var j = _db.Users.First(x => x.Id == iduser);
+            j.Libraries.Remove(library);
+            var t = j.Roles.First(x => x.WorkPlace.Id == library.Id);
+            j.Roles.Remove(t);
+            _db.Library.AddOrUpdate(library);
+            _db.Users.AddOrUpdate(j);
             try
             {
                 _db.SaveChanges();
@@ -58,8 +63,10 @@ namespace OnlineLib.Repository.Repository
             {
                 library.LibUsers.Add(id);
                 id.Libraries.Add(library);
+                id.Roles.Add(new LibUserRole() {RoleId = _db.Roles.First(x=>x.Name == "LibOwners").Id, UserId = id.Id, WorkPlace = library});
                 _db.Users.AddOrUpdate(id);
                 _db.Library.Add(library);
+                
                 try
                 {
                     _db.SaveChanges();
@@ -238,6 +245,33 @@ namespace OnlineLib.Repository.Repository
                 try
                 {
                     _db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                    throw;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public bool Subscribe(int lib, Guid id)
+        {
+            if (lib > 0 && id != Guid.Empty)
+            {
+                var library = _db.Library.First(x => x.Id == lib);
+                var user = _db.Users.First(x => x.Id == id);
+                library.LibUsers.Add(user);
+                user.Libraries.Add(library);
+                var g = _db.Roles.First(x => x.Name == "Readers");
+                library.Workers.Add(new LibUserRole() { RoleId = g.Id, UserId = user.Id, WorkPlace = library });
+                _db.Users.AddOrUpdate(user);
+                _db.Library.AddOrUpdate(library);
+                _db.SaveChanges();
+
+                try
+                {
                 }
                 catch (Exception)
                 {

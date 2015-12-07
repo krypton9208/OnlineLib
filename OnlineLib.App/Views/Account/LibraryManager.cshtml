@@ -7,20 +7,26 @@
 <h2>User libraries</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Search new Library", "Search", "Library", new object(),new {@class="btn-default"})
 </p>
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
+
         <th>
-            @Html.DisplayNameFor(model => model.Photo)
+            @Html.DisplayNameFor(model => model.Address.City)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Text)
+            @Html.DisplayNameFor(model => model.Address.Street)
         </th>
-        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address.Number)
+        </th>
+        <th>
+            Actions 
+        </th>
     </tr>
 
 @foreach (var item in Model) {
@@ -29,13 +35,16 @@
            @Html.ActionLink( item.Name,"Index", "Books", new { lib = item.Id}, null)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Photo)
+            @Html.DisplayFor(x => item.Address.City)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Text)
+            @Html.DisplayFor(x => item.Address.Street)
         </td>
         <td>
-            @Html.ActionLink("Delete", "DeleteLibrary", new { id=item.Id })
+            @Html.DisplayFor(x => item.Address.Number)
+        </td>
+        <td>
+            @Html.ActionLink("UnScribe", "DeleteLibrary",new object(), new { id=item.Id, @class="btn btn-warning" })
         </td>
     </tr>
 }

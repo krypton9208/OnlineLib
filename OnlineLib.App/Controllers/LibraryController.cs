@@ -19,6 +19,27 @@ namespace OnlineLib.App.Controllers
         {
             _libraryRepository = _repo;
         }
+
+        [Route("{lib}/Library/Home")]
+        public ActionResult Index(int lib)
+        {
+            ViewBag.Library = lib;
+            return View(_libraryRepository.GetLibraryById(lib));
+        }
+        [Authorize]
+        [Route("{lib}/Library/SubscribeLibrary")]
+        public ActionResult SubscribeLibrary(int lib)
+        {
+            Guid userid =Guid.Parse(User.Identity.GetUserId());
+            if (lib != 0 && userid != Guid.Empty)
+            {
+                if (_libraryRepository.Subscribe(lib, userid))
+                    return RedirectToAction("Index", "Books", new { @lib = lib });
+
+            }
+            return RedirectToAction("Index", "Library", new {@lib = lib});
+        }
+
         // GET: Library
         [Authorize]
         [HttpGet]

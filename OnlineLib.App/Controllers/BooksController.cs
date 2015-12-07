@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using iTextSharp.text;
@@ -33,13 +34,6 @@ namespace OnlineLib.App.Controllers
         public ActionResult Index(int lib)
         {
             ViewBag.Library = lib;
-            //var t = _booksRepository.GetBooks(lib);
-            //List<int> d = new List<int>();
-            //foreach (Book book in t)
-            //{
-            //    d.Add(book.Id);
-            //}
-            //return _pdfRepository.GeneratePdf(d);
             return View(_booksRepository.GetBooks(lib));
         }
 
@@ -53,12 +47,13 @@ namespace OnlineLib.App.Controllers
         [Route("{lib}/Books/Add")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(Book book, int? lib)
+        public async Task<ActionResult> Add(Book book, int? lib, bool print)
         {
 
             if (ModelState.IsValid && lib != null)
             {
                 _booksRepository.Add(book, (int)lib);
+                if (print) await PdfGeneratorBook(book.Id, (int)lib);
                 return RedirectToAction("Index", new { @lib = lib });
             }
             return View(book);
@@ -121,7 +116,7 @@ namespace OnlineLib.App.Controllers
         }
 
         [Route("{lib}/Books/PdfGeneratorBook/{id}")]
-        public ActionResult PdfGeneratorBook(int id, int lib)
+        public async Task<ActionResult> PdfGeneratorBook(int id, int lib)
         {
             string items = id.ToString().PadLeft(17 - id.ToString().Length, ' ');
 
