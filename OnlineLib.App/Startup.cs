@@ -35,8 +35,9 @@ namespace OnlineLib.App
             builder.RegisterType<BooksRepository>().As<IBooksRepository>().InstancePerRequest();
             builder.RegisterType<EmailService>().As<IIdentityMessageService>().InstancePerRequest();
             builder.RegisterType<LoanActivityRepository>().As<ILoanActivityRepository>().InstancePerRequest();
+            builder.RegisterType<LibManagerRepository>().As<ILibManagerRepository>().InstancePerRequest();
             // REGISTER CONTROLLERS
-           // builder.RegisterControllers<AccountController>(typeof (ILibraryRepository)).AsSelf().InstancePerRequest();
+            // builder.RegisterControllers<AccountController>(typeof (ILibraryRepository)).AsSelf().InstancePerRequest();
             builder.RegisterControllers(typeof (MvcApplication).Assembly);
 
             // BUILD CONTAINER
