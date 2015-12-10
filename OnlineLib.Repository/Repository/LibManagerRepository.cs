@@ -17,7 +17,9 @@ namespace OnlineLib.Repository.Repository
         }
         public bool ChangeUserToWorker(int lib, Guid user)
         {
-            throw new NotImplementedException();
+            if (ChangeUserRange(lib, user, "Workers"))
+                return true;
+            return false;
         }
 
         public bool ChangeUserRange(int lib, Guid user, string Role)
@@ -26,8 +28,17 @@ namespace OnlineLib.Repository.Repository
             {
                 if (_db.Roles.First(x => x.Name == Role) != null)
                 {
-                    _db.Users.First(x => x.Id == user).Roles.First(x => x.WorkPlace.Id == lib).RoleId =
-                        _db.Roles.First(x => x.Name == Role).Id;
+                    if (_db.Users.First(x => x.Id == user).Roles.Count(x => x.WorkPlace.Id == lib) != 0)
+                    {
+                        _db.Users.First(x => x.Id == user).Roles.Remove(_db.Users.First(x => x.Id == user).Roles.First(x => x.WorkPlace.Id == lib));
+                        _db.Users.First(x => x.Id == user).Roles.Add(new LibUserRole() { RoleId = _db.Roles.First(x => x.Name == Role).Id, UserId = user, WorkPlace = _db.Library.FirstOrDefault(x => x.Id == lib) });
+                    }
+                    else
+                    {
+                        _db.Users.First(x => x.Id == user).Roles.Add(new LibUserRole() { RoleId = _db.Roles.First(x => x.Name == Role).Id, UserId = user, WorkPlace = _db.Library.FirstOrDefault(x => x.Id == lib) });
+
+                    }
+
                     try
                     {
                         _db.SaveChanges();
@@ -49,7 +60,7 @@ namespace OnlineLib.Repository.Repository
         {
             if (user != Guid.Empty && lib != 0)
             {
-                if (_db.Users.First(x=>x.Id == user).Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == _db.Roles.First(w=>w.Name == "LibOwners").Id) == 1)
+                if (_db.Users.First(x => x.Id == user).Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == _db.Roles.First(w => w.Name == "LibOwners").Id) == 1)
                     return true;
                 return false;
             }

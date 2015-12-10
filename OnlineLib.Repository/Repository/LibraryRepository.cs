@@ -268,10 +268,10 @@ namespace OnlineLib.Repository.Repository
                 library.Workers.Add(new LibUserRole() { RoleId = g.Id, UserId = user.Id, WorkPlace = library });
                 _db.Users.AddOrUpdate(user);
                 _db.Library.AddOrUpdate(library);
-                _db.SaveChanges();
 
                 try
                 {
+                _db.SaveChanges();
                 }
                 catch (Exception)
                 {
