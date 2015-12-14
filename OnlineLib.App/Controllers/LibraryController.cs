@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 
 namespace OnlineLib.App.Controllers
 {
+    [Authorize]
     public class LibraryController : Controller
     {
         private readonly ILibraryRepository _libraryRepository;
@@ -24,6 +25,9 @@ namespace OnlineLib.App.Controllers
         public ActionResult Index(int lib)
         {
             ViewBag.Library = lib;
+            
+            ViewBag.Sub = _libraryRepository.UserSubscibeLibrary(lib, Guid.Parse(User.Identity.GetUserId()));
+
             return View(_libraryRepository.GetLibraryById(lib));
         }
         [Authorize]

@@ -21,5 +21,7 @@ namespace OnlineLib.Repository.IRepository
         bool Subscribe(int lib, Guid id);
         void Dispose();
         void SaveChanges();
+        bool UserSubscibeLibrary(int lib, Guid user);
+        bool IsWorker(int lib, Guid user);
     }
 }

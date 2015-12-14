@@ -291,5 +291,22 @@ namespace OnlineLib.Repository.Repository
         {
             _db.SaveChanges();
         }
+
+        public bool UserSubscibeLibrary(int lib, Guid user)
+        {
+            if (_db.Users.First(x => x.Id == user).Libraries.Any(x => x.Id == lib)) return true;
+            return false;
+        }
+
+        public bool IsWorker(int lib, Guid user)
+        {
+            var w = _db.Roles.First(x => x.Name == "Workers");
+            var W = _db.Roles.First(x => x.Name == "Main_Workers");
+            var o = _db.Roles.First(x => x.Name == "LibOwners");
+            var libUserRole = _db.Users.First(x => x.Id == user).Roles.FirstOrDefault(d => d.WorkPlace.Id == lib);
+            if (libUserRole != null && (libUserRole.RoleId == w.Id || libUserRole.RoleId == W.Id || libUserRole.RoleId == o.Id))
+                return true;
+            return false;
+        }
     }
 }

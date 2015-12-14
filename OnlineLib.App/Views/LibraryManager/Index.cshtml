@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OnlineLib.Models.LibUser>
+﻿@model ICollection<OnlineLib.Repository.ViewModels.ListWorkersViewModel>
 @{
     ViewBag.Title = "Index";
 }
@@ -6,22 +6,25 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "AddWorker", new { @lib = ViewBag.Library })
+    @Html.ActionLink("Create New", "AddWorker", "LibraryManager", new { @lib = ViewBag.Library })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+           Firstname and lastname
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Surname)
+           City
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+           Street and number
         </th>
 
         <th>
-            Actions
+            Role
+        </th>
+        <th>
+            
         </th>
     </tr>
 
@@ -32,12 +35,14 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Surname)
+                @Html.DisplayFor(modelItem => item.AddressCity)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                @Html.DisplayFor(modelItem => item.AddressStreet)
             </td>
-
+            <td>
+                @Html.DisplayFor(modelItem => item.RoleName)
+            </td>
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Drukuj", "PdfGeneratorBook", new { id = item.Id }) |

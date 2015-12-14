@@ -10,9 +10,13 @@
     <hr/>
     <h2>@Html.DisplayFor(model => model.Name)</h2>
     <img src="../../Image/@Model.Photo" width="300" />
-    @Html.ActionLink("Subscribe", "SubscribeLibrary", new object { }, new { @lib = Model.Id, @class = "btn btn-primary btn-lg" })
+    @if(!ViewBag.Sub) { @Html.ActionLink("Subscribe", "SubscribeLibrary", new object { }, new { @lib = Model.Id, @class = "btn btn-primary btn-lg" })}
+    else
+    {
+        @Html.ActionLink("Books List", "Index","Books", new object { }, new { @lib = Model.Id, @class = "btn btn-primary btn-lg" })
+    }
 
-    
+
     <div class=" dl-horizontal col-lg-offset-1">
 
         <dt>

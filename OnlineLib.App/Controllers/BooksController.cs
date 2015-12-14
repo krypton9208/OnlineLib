@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.AspNet.Identity;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
 using Color = System.Drawing.Color;
@@ -34,14 +35,21 @@ namespace OnlineLib.App.Controllers
         public ActionResult Index(int lib)
         {
             ViewBag.Library = lib;
+            ViewBag.Name = _libraryRepository.GetLibraryById(lib).Name;
+            ViewBag.Worker = _libraryRepository.IsWorker(lib, Guid.Parse(User.Identity.GetUserId()));
             return View(_booksRepository.GetBooks(lib));
         }
 
         [Route("{lib}/Books/Add")]
         public ActionResult Add(int lib)
         {
-            ViewBag.Library = lib;
-            return View();
+            if (_libraryRepository.IsWorker(lib, Guid.Parse(User.Identity.GetUserId())))
+            {
+                ViewBag.Library = lib;
+                return View();
+            }
+            return RedirectToAction("Index");
+
         }
 
         [Route("{lib}/Books/Add")]
@@ -50,7 +58,7 @@ namespace OnlineLib.App.Controllers
         public async Task<ActionResult> Add(Book book, int? lib, bool print)
         {
 
-            if (ModelState.IsValid && lib != null)
+            if (ModelState.IsValid && lib != null && _libraryRepository.IsWorker((int)lib, Guid.Parse(User.Identity.GetUserId())))
             {
                 _booksRepository.Add(book, (int)lib);
                 if (print) await PdfGeneratorBook(book.Id, (int)lib);

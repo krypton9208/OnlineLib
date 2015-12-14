@@ -9,7 +9,7 @@ namespace OnlineLib.App.Controllers
     [RoutePrefix("Home")]
     public class HomeController : Controller
     {
-        [Route("~/Index")]
+        [Route("~/")]
         public ActionResult Index()
         {
             return View();

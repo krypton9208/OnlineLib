@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<OnlineLib.Models.Book>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Books List";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Name</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Add", new {@lib = ViewBag.Library})
+   @if(ViewBag.Worker) { @Html.ActionLink("Add new book", "Add", "Books",new  object(),new {@lib = ViewBag.Library, @class="btn btn-primary"})}
 </p>
 <table class="table">
     <tr>
@@ -41,10 +41,14 @@
             @Html.DisplayFor(modelItem => item.Isbn)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
-            @Html.ActionLink("Drukuj", "PdfGeneratorBook", new { id = item.Id }) |
-
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @if (ViewBag.Worker)
+            {
+                @Html.ActionLink("Edit", "Edit","Books",new object() ,new {id = item.Id,@class = "btn btn-sm btn-default" })
+                @Html.ActionLink("Drukuj", "PdfGeneratorBook","Books",new object(), new { id = item.Id , @class = "btn btn-sm btn-success" })
+                 
+                @Html.ActionLink("Delete", "Delete","Books",new object(), new { id = item.Id,  @class = "btn btn-sm btn-danger" }) 
+            }
+           @Html.ActionLink("Zarezerwuj", "Index", "Books",new object(), new { id = item.Id, @class= "btn btn-sm btn-info" })
         </td>
     </tr>
 }
