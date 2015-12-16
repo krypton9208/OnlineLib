@@ -7,6 +7,7 @@
 
 <p>
     @Html.ActionLink("Create New", "AddWorker", "LibraryManager", new { @lib = ViewBag.Library })
+
 </p>
 <table class="table">
     <tr>
@@ -32,7 +33,7 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.ActionLink(item.Name, "EditWorker", "LibraryManager", new {@user = item.Id, @lib = ViewBag.Library} , null)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AddressCity)

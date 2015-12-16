@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -58,7 +59,6 @@ namespace OnlineLib.App
             return Task.FromResult(0);
         }
     }
-
     public class LibUserStore : UserStore<LibUser, LibRole, Guid, LibLogin, LibUserRole, LibClaim>
     {
         public LibUserStore(OnlineLibDbContext context)
@@ -69,17 +69,41 @@ namespace OnlineLib.App
 
     public class LibRoleStore : RoleStore<LibRole, Guid, LibUserRole>
     {
+        
         public LibRoleStore(OnlineLibDbContext context)
             : base(context)
         {
         }
     }
 
-    public class LinRoleManager : RoleManager<LibRole, Guid>
+    public class Provider : SqlRoleProvider
     {
-        public LinRoleManager(IRoleStore<LibRole, Guid> store) : base(store)
+        public bool IsLibOwner(int lib, Guid user)
+        {
+            return true;
+        }
+    }
+
+    public class LibRoleManager : RoleManager<LibRole, Guid>
+    {
+       
+
+        public LibRoleManager(IRoleStore<LibRole, Guid> store) : base(store)
         {
         }
+
+        public bool IsLibOwner(int lib, Guid user)
+        {
+            return true;
+        }
+        public static LibRoleManager Create(IdentityFactoryOptions<LibRoleManager> options, IOwinContext context)
+        {
+            var manager = new LibRoleManager(new RoleStore<LibRole, Guid, LibUserRole>(context.Get<OnlineLibDbContext>()));
+            manager.RoleValidator = new RoleValidator<LibRole, Guid>(manager);
+            return manager;
+        }
+
+   
     }
 
 
@@ -90,40 +114,41 @@ namespace OnlineLib.App
         public LibUserManager(IUserStore<LibUser, Guid> store, IDataProtectionProvider dataProtectionProvider)
             : base(store)
         {
+       
 
 
-            //public static LibUserManager Create(IdentityFactoryOptions<LibUserManager> options, IOwinContext context) 
-            //{
-            //var manager = new LibUserManager(new LibUserStore<LibUser, Guid>(context.Get<OnlineLibDbContext>()));
-            // Configure validation logic for usernames
-            UserValidator = new UserValidator<LibUser, Guid>(this)
-            {
-                AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
-            };
+        //public static LibUserManager Create (IdentityFactoryOptions<LibUserManager> options, IOwinContext context)
+        //    {
+                //var manager = new LibUserManager(new LibUserStore(context.Get<OnlineLibDbContext>()));
+                // Configure validation logic for usernames
+                UserValidator = new UserValidator<LibUser, Guid>(this)
+                {
+                    AllowOnlyAlphanumericUserNames = false,
+                    RequireUniqueEmail = true
+                };
 
-            // Configure validation logic for passwords
-            PasswordValidator = new PasswordValidator
-            {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = false,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
-            };
+                // Configure validation logic for passwords
+                PasswordValidator = new PasswordValidator
+                {
+                    RequiredLength = 6,
+                    RequireNonLetterOrDigit = false,
+                    RequireDigit = true,
+                    RequireLowercase = true,
+                    RequireUppercase = true,
+                };
 
-            // Configure user lockout defaults
-            UserLockoutEnabledByDefault = true;
-            DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            MaxFailedAccessAttemptsBeforeLockout = 5;
-            EmailService = new EmailService();
-            if (dataProtectionProvider != null)
-            {
-                UserTokenProvider =
-                    new DataProtectorTokenProvider<LibUser, Guid>(dataProtectionProvider.Create("ASP.NET Identity"));
+                // Configure user lockout defaults
+                UserLockoutEnabledByDefault = true;
+                DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                MaxFailedAccessAttemptsBeforeLockout = 5;
+                EmailService = new EmailService();
+                if (dataProtectionProvider != null)
+                {
+                    UserTokenProvider =
+                        new DataProtectorTokenProvider<LibUser, Guid>(dataProtectionProvider.Create("ASP.NET Identity"));
+                }
             }
-        }
-        
+
 
     }
 

@@ -57,15 +57,24 @@ namespace OnlineLib.App.Controllers
         public ActionResult Index(int lib)
         {
             if (_libManagerRepository.IsLibOwner(Guid.Parse(User.Identity.GetUserId()), lib))
+            {
+                ViewBag.LibOwner = true;
+                ViewBag.Library = lib;
                 return View(_libManagerRepository.GetWorkers(lib));
+            }
+            ViewBag.LibOwner = false;
             return View("Error");
         }
-
+     
         [Route("{lib}/Manager/Workers/Add")]
         public ActionResult AddWorker(int lib)
         {
-            ViewBag.Library = lib;
-            return View();
+            if (_libManagerRepository.IsLibOwner(Guid.Parse(User.Identity.GetUserId()), lib))
+            {
+                ViewBag.Library = lib;
+                return View();
+            }
+            else return View("Error");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -96,6 +105,59 @@ namespace OnlineLib.App.Controllers
                 return RedirectToAction("Index", "LibraryManager", new { @lib = lib });
             }
             return View(model);
+        }
+        
+        [Route("{lib}/Manager/Workers/EditWorker/{user}")]
+        public ActionResult EditWorker(int lib, Guid user)
+        {
+            if (_libManagerRepository.IsLibOwner(Guid.Parse(User.Identity.GetUserId()), lib))
+            {
+                ViewBag.Library = lib;
+                ViewBag.Roles = _libManagerRepository.GetRoles();
+                return View(_libManagerRepository.GetWorker(user,lib));
+            }
+            else return View("Error");
+        }
+
+        [Route("{lib}/Manager/Workers/EditWorker/{user}")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult EditWorker(int lib, Repository.ViewModels.ListWorkersViewModel model)
+        {
+            if (_libManagerRepository.IsLibOwner(Guid.Parse(User.Identity.GetUserId()), lib))
+            {
+
+                if ( _libManagerRepository.ChangeUserRange(lib, model.Id, model.RoleName))
+                return RedirectToAction("Index", "LibraryManager", new { @lib = lib });
+
+            }
+            return View(_libManagerRepository.GetWorker(model.Id, lib));
+        }
+
+        [Route("{lib}/Manager/TextEditor")]
+        public ActionResult EditLibraryText(int lib)
+        {
+            if (_libManagerRepository.IsLibOwner(Guid.Parse(User.Identity.GetUserId()), lib))
+            {
+               
+                return View(_libraryRepository.GetLibraryById(lib));
+            }
+            return View("Error");
+        }
+
+        [Route("{lib}/Manager/TextEditor")]
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult EditLibraryText(int lib, Library model)
+        {
+            if (_libManagerRepository.IsLibOwner(Guid.Parse(User.Identity.GetUserId()), lib))
+            {
+                var d = _libraryRepository.GetLibraryById(lib);
+                d.Text = model.Text;
+                if (_libraryRepository.UpdateLibrary(d))
+                    return RedirectToAction("Index", "Library", new {@lib = lib});
+            }
+            return View("Error");
         }
     }
 }

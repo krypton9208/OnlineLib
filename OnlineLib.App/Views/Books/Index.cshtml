@@ -3,11 +3,24 @@
 @{
     ViewBag.Title = "Books List";
 }
+<div>
 
-<h2>@ViewBag.Name</h2>
+    <h2>@ViewBag.Name</h2>
+    @if (ViewBag.LibOwner == true)
+    {
+        @Html.ActionLink("Library Manager", "Index", "LibraryManager", new object(), new { @lib = ViewBag.Library, @class = "btn btn-primary pull-right" })
+    }
+</div>
+
 
 <p>
-   @if(ViewBag.Worker) { @Html.ActionLink("Add new book", "Add", "Books",new  object(),new {@lib = ViewBag.Library, @class="btn btn-primary"})}
+    <div>
+        @if (ViewBag.Worker)
+        {
+            @Html.ActionLink("Add new book", "Add", "Books", new object(), new { @lib = ViewBag.Library, @class = "btn btn-primary" })
+        }
+     
+    </div>
 </p>
 <table class="table">
     <tr>
@@ -26,31 +39,32 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Autor)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Lended)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Isbn)
-        </td>
-        <td>
-            @if (ViewBag.Worker)
-            {
-                @Html.ActionLink("Edit", "Edit","Books",new object() ,new {id = item.Id,@class = "btn btn-sm btn-default" })
-                @Html.ActionLink("Drukuj", "PdfGeneratorBook","Books",new object(), new { id = item.Id , @class = "btn btn-sm btn-success" })
-                 
-                @Html.ActionLink("Delete", "Delete","Books",new object(), new { id = item.Id,  @class = "btn btn-sm btn-danger" }) 
-            }
-           @Html.ActionLink("Zarezerwuj", "Index", "Books",new object(), new { id = item.Id, @class= "btn btn-sm btn-info" })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Autor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lended)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Isbn)
+            </td>
+            <td>
+                @if (ViewBag.Worker)
+                {
+                    @Html.ActionLink("Edit", "Edit", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-default" })
+                    @Html.ActionLink("Drukuj", "PdfGeneratorBook", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-success" })
+
+                    @Html.ActionLink("Delete", "Delete", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-danger" })
+                }
+                @Html.ActionLink("Zarezerwuj", "Index", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-info" })
+            </td>
+        </tr>
+    }
 
 </table>

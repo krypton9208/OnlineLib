@@ -23,5 +23,6 @@ namespace OnlineLib.Repository.IRepository
         void SaveChanges();
         bool UserSubscibeLibrary(int lib, Guid user);
         bool IsWorker(int lib, Guid user);
+        bool IsLibOwner( Guid user, int lib);
     }
 }

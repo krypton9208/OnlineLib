@@ -27,7 +27,7 @@ namespace OnlineLib.App
             builder.RegisterType<LibRoleStore>().As<IRoleStore<LibRole, Guid>>().InstancePerRequest();
             builder.RegisterType<LibUserStore>().As<IUserStore<LibUser, Guid>>().InstancePerRequest();
             builder.RegisterType<LibUserManager>().AsSelf().InstancePerRequest();
-            builder.RegisterType<LinRoleManager>().AsSelf().InstancePerRequest();
+            builder.RegisterType<LibRoleManager>().AsSelf().InstancePerRequest();
             builder.RegisterType<LibSignInManager>().AsSelf().InstancePerRequest();
             builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
             builder.Register(c => app.GetDataProtectionProvider()).InstancePerRequest();

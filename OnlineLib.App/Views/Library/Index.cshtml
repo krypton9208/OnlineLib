@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Index";
+    ViewBag.Text = Model.Text;
 }
 
 
@@ -65,10 +66,9 @@
 
         <hr/>
     <div>
-        @Html.DisplayFor(model => model.Text)
+        @Html.Raw(ViewBag.Text)
     </div>
 
 
-    </dl>
 </div>
 

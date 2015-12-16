@@ -16,17 +16,19 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("OnlineLib", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    
+
                     <li>@Html.ActionLink("Search", "Search", "Library")</li>
                     @if (Request.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Libraries", "LibraryManager", "Account")</li>
                     }
+                   
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

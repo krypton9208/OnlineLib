@@ -298,6 +298,17 @@ namespace OnlineLib.Repository.Repository
             return false;
         }
 
+        public bool IsLibOwner(Guid user, int lib)
+        {
+            if (user != Guid.Empty && lib != 0)
+            {
+                if (_db.Users.First(x => x.Id == user).Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == _db.Roles.First(w => w.Name == "LibOwners").Id) == 1)
+                    return true;
+                return false;
+            }
+            return false;
+        }
+
         public bool IsWorker(int lib, Guid user)
         {
             var w = _db.Roles.First(x => x.Name == "Workers");

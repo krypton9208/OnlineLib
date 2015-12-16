@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Windows.Forms;
 using OnlineLib.Models;
 using OnlineLib.Repository.ViewModels;
 using OnlineLib.Repository.IRepository;
@@ -22,6 +24,8 @@ namespace OnlineLib.Repository.Repository
                 return true;
             return false;
         }
+
+       
 
         public bool ChangeUserRange(int lib, Guid user, string role)
         {
@@ -68,6 +72,7 @@ namespace OnlineLib.Repository.Repository
             return false;
         }
 
+
         public ICollection<ListWorkersViewModel> GetWorkers(int lib)
         {
             if (lib != 0)
@@ -75,6 +80,7 @@ namespace OnlineLib.Repository.Repository
                 ICollection<ListWorkersViewModel> list = new HashSet<ListWorkersViewModel>();
                 var w = _db.Roles.First(x => x.Name == "Workers");
                 var W = _db.Roles.First(x => x.Name == "Main_Workers");
+
                 var workers = _db.Users.Where(
                      x =>
                          x.Roles.FirstOrDefault(d => d.WorkPlace.Id == lib).RoleId == w.Id ||
@@ -82,11 +88,12 @@ namespace OnlineLib.Repository.Repository
                 foreach (LibUser user in workers)
                 {
                     var role = "";
-                    role = user.Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == w.Id) > 0 ? "Worker" : "Super Worker";
+                    role = user.Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == w.Id) > 0 ? "Workers" : "Main_Workers";
                     if (user.Adress == null)
                     {
                         list.Add(new ListWorkersViewModel()
                         {
+                            Id = user.Id,
                             AddressCity = "none",
                             AddressStreet = "none",
                             Name = user.Name + " " + user.Surname,
@@ -94,17 +101,65 @@ namespace OnlineLib.Repository.Repository
                         });
                     }
                     else
-                    list.Add(new ListWorkersViewModel()
-                    {
-                        AddressCity = user.Adress.City ?? String.Empty,
-                        AddressStreet = user.Adress.Street ?? String.Empty  + " " + user.Adress.Number?? String.Empty,
-                        Name = user.Name + " " + user.Surname,
-                        RoleName = role
-                    });
+                        list.Add(new ListWorkersViewModel()
+                        {
+                            Id = user.Id,
+                            AddressCity = user.Adress.City ?? String.Empty,
+                            AddressStreet = user.Adress.Street ?? String.Empty + " " + user.Adress.Number ?? String.Empty,
+                            Name = user.Name + " " + user.Surname,
+                            RoleName = role
+                        });
                 }
                 return list;
             }
             return null;
+        }
+
+        public ListWorkersViewModel GetWorker(Guid user, int lib)
+        {
+            var p = _db.Users.First(x => x.Id == user);
+            var w = _db.Roles.First(x => x.Name == "Workers");
+            var role = "";
+
+            role = p.Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == w.Id) > 0 ? "Workers" : "Main_Workers";
+
+            if (p.Adress == null)
+            {
+                var tem = new ListWorkersViewModel()
+                {
+                    Id = p.Id,
+                    AddressCity = "none",
+                    AddressStreet = "none",
+                    Name = p.Name + " " + p.Surname,
+                    RoleName = role
+                };
+                return tem;
+            }
+            else
+            {
+                var tem = new ListWorkersViewModel()
+                {
+                    Id = p.Id,
+                    AddressCity = p.Adress.City ?? String.Empty,
+                    AddressStreet = p.Adress.Street ?? String.Empty + " " + p.Adress.Number ?? String.Empty,
+                    Name = p.Name + " " + p.Surname,
+                    RoleName = role
+                };
+                return tem;
+            }
+        }
+
+        public IEnumerable<SelectListItem> GetRoles()
+        {
+
+            var dd = new List<SelectListItem>();
+            foreach (var role in _db.Roles)
+            {
+                if (role.Name == "Workers" || role.Name == "Main_Workers" )
+                    dd.Add(new SelectListItem() { Text = role.Name, Value = role.Name });
+            }
+            return dd;
+
         }
     }
 }

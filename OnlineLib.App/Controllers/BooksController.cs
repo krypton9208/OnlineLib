@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
 using Color = System.Drawing.Color;
@@ -25,18 +26,20 @@ namespace OnlineLib.App.Controllers
         private readonly IBooksRepository _booksRepository;
         private readonly ILibraryRepository _libraryRepository;
         // GET: Books
-        public BooksController(IBooksRepository _repository, ILibraryRepository _repo)
+        public BooksController(IBooksRepository _repository, ILibraryRepository _repo, LibRoleManager _dd)
         {
             _booksRepository = _repository;
             _libraryRepository = _repo;
         }
 
+       
         [Route("{lib}/Books")]
         public ActionResult Index(int lib)
         {
             ViewBag.Library = lib;
             ViewBag.Name = _libraryRepository.GetLibraryById(lib).Name;
             ViewBag.Worker = _libraryRepository.IsWorker(lib, Guid.Parse(User.Identity.GetUserId()));
+            ViewBag.LibOwner = _libraryRepository.IsLibOwner( Guid.Parse(User.Identity.GetUserId()), lib);
             return View(_booksRepository.GetBooks(lib));
         }
 

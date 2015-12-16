@@ -26,6 +26,9 @@ namespace OnlineLib.App.ViewModels
     public class ListWorkersViewModel
     {
         [Required]
+        public Guid Id { get; set; }
+
+        [Required]
         [Display(Name = "Name and surname: ")]
         public string Name { get; set; }
 
