@@ -44,7 +44,7 @@
             @Html.DisplayFor(x => item.Address.Number)
         </td>
         <td>
-            @Html.ActionLink("UnScribe", "DeleteLibrary",new object(), new { id=item.Id, @class="btn btn-warning" })
+            @Html.ActionLink("UnScribe", "DeleteLibrary",new {@id = item.Id}, new { id=item.Id, @class="btn btn-warning" })
         </td>
     </tr>
 }

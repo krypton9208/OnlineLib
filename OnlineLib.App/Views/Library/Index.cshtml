@@ -2,71 +2,59 @@
 
 @{
     ViewBag.Title = "Index";
-    ViewBag.Text = Model.Text;
 }
-
-
 
 <div>
     <hr/>
     <h2>@Html.DisplayFor(model => model.Name)</h2>
-    <img src="../../Image/@Model.Photo" width="300" />
-    @if(!ViewBag.Sub) { @Html.ActionLink("Subscribe", "SubscribeLibrary", new object { }, new { @lib = Model.Id, @class = "btn btn-primary btn-lg" })}
-    else
-    {
-        @Html.ActionLink("Books List", "Index","Books", new object { }, new { @lib = Model.Id, @class = "btn btn-primary btn-lg" })
-    }
-
-
-    <div class=" dl-horizontal col-lg-offset-1">
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Address.Contry)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Address.Contry)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Address.PostCode)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Address.PostCode)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Address.City)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Address.City)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Address.Street)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Address.Street)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Address.Number)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Address.Number)
-        </dd>
-
-       
-
+    <div class="">
+        <img src="../../Image/@Model.Photo" width="350" class="top-right" />
+        
+        @if (!ViewBag.Sub)
+        {
+            @Html.ActionLink("Subscribe", "SubscribeLibrary", new object {}, new {@lib = Model.Id, @class = "btn btn-primary btn-lg "})
+        }
+        else
+        {
+            @Html.ActionLink("Books List", "Index", "Books", new object {}, new {@lib = Model.Id, @class = "btn btn-primary btn-lg"})
+        }
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Address.Contry)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Address.Contry)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Address.PostCode)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Address.PostCode)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Address.City)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Address.City)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Address.Street)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Address.Street)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Address.Number)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Address.Number)
+            </dd>
+        </dl>
     </div>
-
-
+    <br/>
         <hr/>
     <div>
-        @Html.Raw(ViewBag.Text)
+        @Html.Raw(Model.Text)
     </div>
 
 

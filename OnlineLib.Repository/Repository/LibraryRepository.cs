@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
+using OnlineLib.Repository.ViewModels;
 
 namespace OnlineLib.Repository.Repository
 {
@@ -33,7 +34,47 @@ namespace OnlineLib.Repository.Repository
             return _db.Library.FirstOrDefault(x => x.Name == name);
         }
 
-        public Guid GetUserGuidByEmail(string email) => _db.Users.First(x => x.Email == email).Id;
+        public ProfiEditViewModel GetUserEditViewModel(Guid user)
+        {
+            LibUser tUser = _db.Users.FirstOrDefault(x => x.Id == user);
+            if (tUser != null)
+                return new ProfiEditViewModel()
+                {
+                    Id = tUser.Id,
+                    Name = tUser.Name,
+                    Surname = tUser.Surname
+
+                };
+            return new ProfiEditViewModel();
+        }
+
+        public bool UpdateUserEditVieModel(ProfiEditViewModel model)
+        {
+            var tuser = _db.Users.First(x => x.Id == model.Id);
+            tuser.Name = model.Name;
+            tuser.Surname = model.Surname;
+           
+            _db.Users.AddOrUpdate(tuser);
+            try
+            {
+                _db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+            return true;
+        }
+
+        public bool IsUserWithThisEMail(string email)
+        {
+            if (_db.Users.First(x => x.Email == email) != null)
+                return true;
+            return false;
+        }
+
+        public Guid GetUserGuidFromEmail(string email) => _db.Users.First(x => x.Email == email).Id;
 
         public bool RemoveUserFromLibrary(int idlib, Guid iduser)
         {
@@ -63,10 +104,10 @@ namespace OnlineLib.Repository.Repository
             {
                 library.LibUsers.Add(id);
                 id.Libraries.Add(library);
-                id.Roles.Add(new LibUserRole() {RoleId = _db.Roles.First(x=>x.Name == "LibOwners").Id, UserId = id.Id, WorkPlace = library});
+                id.Roles.Add(new LibUserRole() { RoleId = _db.Roles.First(x => x.Name == "LibOwners").Id, UserId = id.Id, WorkPlace = library });
                 _db.Users.AddOrUpdate(id);
                 _db.Library.Add(library);
-                
+
                 try
                 {
                     _db.SaveChanges();
@@ -271,7 +312,7 @@ namespace OnlineLib.Repository.Repository
 
                 try
                 {
-                _db.SaveChanges();
+                    _db.SaveChanges();
                 }
                 catch (Exception)
                 {
@@ -294,8 +335,28 @@ namespace OnlineLib.Repository.Repository
 
         public bool UserSubscibeLibrary(int lib, Guid user)
         {
-            if (_db.Users.First(x => x.Id == user).Libraries.Any(x => x.Id == lib)) return true;
-            return false;
+            if (_db.Users.First(x => x.Id == user).Libraries.Any(x => x.Id == lib))
+            {
+                var library = _db.Library.First(x => x.Id == lib);
+                var User = _db.Users.First(x => x.Id == user);
+                library.LibUsers.Remove(User);
+                User.Libraries.Remove(library);
+                if (library.Workers.First(x=>x.UserId == user) != null)
+                library.Workers.Remove(User.Roles.First(x=>x.WorkPlace.Id == lib));
+                _db.Users.AddOrUpdate(User);
+                _db.Library.AddOrUpdate(library);
+                try
+                {
+                    _db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                    throw;
+                }
+                return true;
+            }
+            return true;
         }
 
         public bool IsLibOwner(Guid user, int lib)

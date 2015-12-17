@@ -18,8 +18,6 @@ namespace OnlineLib.Models
         public string Name { get; set; }
         public string Surname { get; set; }
 
-        public Guid AdresId { get; set; }
-        public virtual Address Adress { get; set; }
         public virtual ICollection<Library> Libraries { get; set; }
         public virtual ICollection<LoanActivity> BookedBooks { get; set; }
 
@@ -56,8 +54,6 @@ namespace OnlineLib.Models
                 ul.MapRightKey("Library_Id");
                 ul.ToTable("LibUserLibrary");
             });
-            
-            HasOptional(x => x.Adress);
             ToTable("LibUser");
 
         }

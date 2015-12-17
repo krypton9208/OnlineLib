@@ -6,7 +6,10 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "AddWorker", "LibraryManager", new { @lib = ViewBag.Library })
+    @Html.ActionLink("Create New", "AddWorker", "LibraryManager", new { @lib = ViewBag.Library, @class="btn btn-default" })
+    @Html.ActionLink("Edit Welcome text", "EditLibraryText", "LibraryManager", new { @lib = ViewBag.Library , @class="btn btn-default"})
+    @Html.ActionLink("Search new worker", "SearchWorker", "LibraryManager", new { @lib = ViewBag.Library, @class = "btn btn-default" })
+
 
 </p>
 <table class="table">
@@ -17,13 +20,7 @@
         <th>
            City
         </th>
-        <th>
-           Street and number
-        </th>
-
-        <th>
-            Role
-        </th>
+       
         <th>
             
         </th>
@@ -35,12 +32,7 @@
             <td>
                 @Html.ActionLink(item.Name, "EditWorker", "LibraryManager", new {@user = item.Id, @lib = ViewBag.Library} , null)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddressCity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddressStreet)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.RoleName)
             </td>

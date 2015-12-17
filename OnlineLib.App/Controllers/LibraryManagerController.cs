@@ -159,5 +159,24 @@ namespace OnlineLib.App.Controllers
             }
             return View("Error");
         }
+        [Route("{lib}/Manager/SearchWorker")]
+        public ActionResult SearchWorker(int lib)
+        {
+            ViewBag.Library = lib;
+            return View();
+        }
+        [Route("{lib}/Manager/SearchWorker")]
+        [HttpPost]
+        public ActionResult SearchWorker(int lib, string email)
+        {
+            if (_libraryRepository.IsUserWithThisEMail(email))
+            {
+                if (_libManagerRepository.ChangeUserToWorker(lib, _libraryRepository.GetUserGuidFromEmail(email)))
+                    return RedirectToAction("Index", new {@lib = lib});
+            }
+            ViewBag.StatusMessage = "email not found";
+            ViewBag.Library = lib;
+            return View();
+        }
     }
 }

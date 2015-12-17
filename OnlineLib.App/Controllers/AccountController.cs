@@ -66,11 +66,11 @@ namespace OnlineLib.App.Controllers
             return View(_libraryRepository.GetUserByGuid(Guid.Parse(User.Identity.GetUserId())).Libraries);
         }
 
-        [Route("Account/DeleteLibrary")]
-        public ActionResult DeleteLibrary(int? id)
+        [Route("Account/DeleteLibrary/{id}")]
+        public ActionResult DeleteLibrary(int id)
         {
             if (id != null)
-                if (_libraryRepository.RemoveUserFromLibrary((int) id, Guid.Parse(User.Identity.GetUserId())))
+                if (_libraryRepository.RemoveUserFromLibrary( id, Guid.Parse(User.Identity.GetUserId())))
                     return RedirectToAction("LibraryManager");
             return View("Error");
         }

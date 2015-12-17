@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OnlineLib.Models;
+using OnlineLib.Repository.ViewModels;
 
 namespace OnlineLib.Repository.IRepository
 {
@@ -12,7 +13,10 @@ namespace OnlineLib.Repository.IRepository
         Library GetLibraryByName(string name);
         bool RemoveUserFromLibrary(int idlib, Guid iduser);
         bool AddLibrary(Library library, LibUser id);
-        Guid GetUserGuidByEmail(string email);
+        ProfiEditViewModel GetUserEditViewModel(Guid user);
+        bool UpdateUserEditVieModel(ProfiEditViewModel model);
+        bool IsUserWithThisEMail(string email);
+        Guid GetUserGuidFromEmail(string email);
         bool UpdateLibrary(Library library);
         bool RemoveLibrary(Library library);
         ICollection<Book> GetAllBooks(int lib);

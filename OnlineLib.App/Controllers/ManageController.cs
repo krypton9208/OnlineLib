@@ -7,6 +7,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using OnlineLib.App.Models;
+using OnlineLib.Models;
+using OnlineLib.Repository.IRepository;
+using OnlineLib.Repository.ViewModels;
 
 namespace OnlineLib.App.Controllers
 {
@@ -15,15 +18,16 @@ namespace OnlineLib.App.Controllers
     {
         private LibSignInManager _signInManager;
         private LibUserManager _userManager;
-
+        private readonly ILibraryRepository _libraryRepository;
         public ManageController()
         {
         }
 
-        public ManageController(LibUserManager userManager, LibSignInManager signInManager)
+        public ManageController(LibUserManager userManager, LibSignInManager signInManager, ILibraryRepository libraryRepository)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _libraryRepository = libraryRepository;
         }
 
         public LibSignInManager SignInManager
@@ -98,6 +102,26 @@ namespace OnlineLib.App.Controllers
                 message = ManageMessageId.Error;
             }
             return RedirectToAction("ManageLogins", new { Message = message });
+        }
+
+        [Route("Manage/ProfilEdit")]
+        public ActionResult ProfilEdit()
+        {
+            return View(_libraryRepository.GetUserEditViewModel(Guid.Parse(User.Identity.GetUserId())));
+        }
+
+        [Route("Manage/ProfilEdit")]
+        [HttpPost]
+        public ActionResult ProfilEdit(ProfiEditViewModel model)
+        {
+
+            if (_libraryRepository.UpdateUserEditVieModel(model))
+            {
+                ViewBag.StatusMessage = "Save complete.";
+                return View();
+            }
+            ViewBag.StatusMessage = "Some errors...";
+            return View(model);
         }
 
         //
