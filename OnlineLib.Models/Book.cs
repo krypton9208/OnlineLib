@@ -16,6 +16,7 @@ namespace OnlineLib.Models
         public string Isbn { get; set; }
         public int LibraryId { get; set; }
         public virtual Library Library { get; set; }
+        public string ShortId { get; set; } 
 
         public virtual LoanActivity LoadActivity { get; set; }
     }
@@ -30,6 +31,7 @@ namespace OnlineLib.Models
             Property(x => x.Autor).HasMaxLength(100).IsOptional().HasColumnName("Author: ");
             Property(x => x.Isbn).HasMaxLength(16).IsOptional().HasColumnName("Isbn: ");
             Property(x => x.Lended).IsOptional().HasColumnName("Lended: ");
+            Property(x => x.ShortId).IsOptional().HasColumnName("ShortGuid: ");
             HasRequired<Library>(x => x.Library).WithMany(d => d.Books).HasForeignKey(w => w.LibraryId);
             ToTable("Books");
         }

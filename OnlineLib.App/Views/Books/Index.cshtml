@@ -57,8 +57,8 @@
             <td>
                 @if (ViewBag.Worker)
                 {
-                    @Html.ActionLink("Edit", "Edit", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-default" })
-                    @Html.ActionLink("Drukuj", "PdfGeneratorBook", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-success" })
+                    @Html.ActionLink("Edit", "Edit", "Books", new { id = item.Id}, new { id = item.Id, @class = "btn btn-sm btn-default" })
+                    @Html.ActionLink("Drukuj", "PdfGeneratorBook", "Books", new { id = item.Id }, new { id = item.Id, @class = "btn btn-sm btn-success" })
 
                     @Html.ActionLink("Delete", "Delete", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-danger" })
                 }

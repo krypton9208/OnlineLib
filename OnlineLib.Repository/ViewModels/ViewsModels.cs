@@ -35,7 +35,14 @@ namespace OnlineLib.Repository.ViewModels
         [Required]
         [Display(Name = "Surname: ")]
         public string Surname { get; set; }
-
-
     }
+
+    public class BookToPrint
+    {
+        public Book Book { get; set; }
+
+        [Display(Name = "Print: ")]
+        public bool Print { get; set; }
+    }
+
 }

@@ -8,8 +8,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Antlr.Runtime.Misc;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using iTextSharp.text.rtf.style;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using OnlineLib.Models;
@@ -17,6 +19,10 @@ using OnlineLib.Repository.IRepository;
 using Color = System.Drawing.Color;
 using Font = System.Drawing.Font;
 using Image = iTextSharp.text.Image;
+using System.Security.Cryptography;
+using System.Text;
+using OnlineLib.Repository.Repository;
+using OnlineLib.Repository.ViewModels;
 
 namespace OnlineLib.App.Controllers
 {
@@ -32,14 +38,14 @@ namespace OnlineLib.App.Controllers
             _libraryRepository = _repo;
         }
 
-       
+
         [Route("{lib}/Books")]
         public ActionResult Index(int lib)
         {
             ViewBag.Library = lib;
             ViewBag.Name = _libraryRepository.GetLibraryById(lib).Name;
             ViewBag.Worker = _libraryRepository.IsWorker(lib, Guid.Parse(User.Identity.GetUserId()));
-            ViewBag.LibOwner = _libraryRepository.IsLibOwner( Guid.Parse(User.Identity.GetUserId()), lib);
+            ViewBag.LibOwner = _libraryRepository.IsLibOwner(Guid.Parse(User.Identity.GetUserId()), lib);
             return View(_booksRepository.GetBooks(lib));
         }
 
@@ -64,7 +70,6 @@ namespace OnlineLib.App.Controllers
             if (ModelState.IsValid && lib != null && _libraryRepository.IsWorker((int)lib, Guid.Parse(User.Identity.GetUserId())))
             {
                 _booksRepository.Add(book, (int)lib);
-                if (print) await PdfGeneratorBook(book.Id, (int)lib);
                 return RedirectToAction("Index", new { @lib = lib });
             }
             return View(book);
@@ -127,9 +132,66 @@ namespace OnlineLib.App.Controllers
         }
 
         [Route("{lib}/Books/PdfGeneratorBook/{id}")]
-        public async Task<ActionResult> PdfGeneratorBook(int id, int lib)
+        public ActionResult PdfGeneratorBook(int id, int lib)
         {
-            string items = id.ToString().PadLeft(17 - id.ToString().Length, ' ');
+            var item = _booksRepository.GenerateCodeToPrint(id);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(PageSize.A4, 20, 20, 30, 20);
+
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                writer.SetPdfVersion(iTextSharp.text.pdf.PdfWriter.PDF_VERSION_1_7);
+                document.Open();
+                MultiColumnText columns = new MultiColumnText();
+                columns.AddRegularColumns(30f, document.PageSize.Width - 30f, 30f, 3);
+                var namefont = FontFactory.GetFont("Times New Roman", 10);
+                PdfContentByte cb = writer.DirectContent;
+
+                columns.AddElement(new Chunk("   " + item.GetLibraryName, namefont));
+                columns.AddElement(Chunk.NEWLINE);
+                columns.AddElement(Barcode(item.GetCode).CreateImageWithBarcode(cb, null, null));
+                columns.AddElement(new Chunk(item.GetBookName, namefont));
+                columns.AddElement(Chunk.NEWLINE);
+
+
+
+                document.Add(columns);
+                document.Close();
+                writer.Close();
+                return File(ms.ToArray(), "application/pdf", _booksRepository.GetBookById(id).Title + ".pdf");
+            }
+
+        }
+
+
+
+        [Route("{lib}/Books/SelectToPrint")]
+        public ActionResult SelectToPrint(int lib)
+        {
+            ViewBag.Library = lib;
+            var tt = new List<BookToPrint>();
+            tt = _booksRepository.BookToPrint(lib);
+            return View(tt);
+        }
+
+        [Route("{lib}/Books/SelectToPrint")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult SelectToPrint(int lib, List<BookToPrint> model)
+        {
+            List<int> t = new List<int>();
+            foreach (var item in model)
+            {
+                if (item.Print) t.Add(item.Book.Id);
+            }
+            return PdfGeneratorBooks(t, lib);
+        }
+
+        [Route("{lib}/Books/PdfGeneratorBooks/{id}")]
+        [HttpPost]
+        public ActionResult PdfGeneratorBooks(List<int> id, int lib)
+        {
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -139,62 +201,48 @@ namespace OnlineLib.App.Controllers
                 writer.SetPdfVersion(iTextSharp.text.pdf.PdfWriter.PDF_VERSION_1_7);
 
                 document.Open();
-
                 MultiColumnText columns = new MultiColumnText();
-                columns.AddRegularColumns(36f, document.PageSize.Width - 36f, 24f, 2);
-                columns.AddElement(GetValue(_libraryRepository.GetLibraryById(lib).Name, Barcode(items)));
-
+                columns.AddRegularColumns(30f, document.PageSize.Width - 30f, 30f, 3);
+                var namefont = FontFactory.GetFont("Times New Roman", 10);
+                PdfContentByte cb = writer.DirectContent;
+                int i = 1;
+                foreach (BooksRepository.BookLabel item in _booksRepository.GenerateCodeToPrint(id))
+                {
+                    columns.AddElement(new Chunk("   " + item.GetLibraryName, namefont));
+                    columns.AddElement(Chunk.NEWLINE);
+                    columns.AddElement(Barcode(item.GetCode).CreateImageWithBarcode(cb, null, null));
+                    columns.AddElement(new Chunk(item.GetBookName, namefont));
+                    columns.AddElement(Chunk.NEWLINE);
+                    if (i % 7 == 0)
+                    {
+                        columns.AddElement(Chunk.NEWLINE);
+                        columns.AddElement(Chunk.NEWLINE);
+                        columns.AddElement(Chunk.NEWLINE);
+                    }
+                    i++;
+                }
                 document.Add(columns);
                 document.Close();
                 writer.Close();
-                return File(ms.ToArray(), "application/pdf", _booksRepository.GetBookById(id).Title+".pdf");
+                return File(ms.ToArray(), "application/pdf", "Lista Etykiet.pdf");
             }
 
         }
 
-        private static Image GetValue(string nazwa, Barcode128 code)
-        {
-            System.Drawing.Bitmap bmpimg = new Bitmap(230, 70);
-
-            Graphics bmpgraphics = Graphics.FromImage(bmpimg);
-            bmpgraphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
-            bmpgraphics.CompositingQuality = CompositingQuality.HighQuality;
-            bmpgraphics.Clear(Color.White);
-            bmpgraphics.SmoothingMode = SmoothingMode.AntiAlias;
-            bmpgraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            bmpgraphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            bmpgraphics.DrawLine(new Pen(Brushes.Black, 2), new Point(0, 0), new Point(0, bmpimg.Height - 10));
-            bmpgraphics.DrawLine(new Pen(Brushes.Black, 2), new Point(0, 0), new Point(bmpimg.Width, 0));
-            bmpgraphics.DrawLine(new Pen(Brushes.Black, 2), new Point(bmpimg.Width, 0),
-                new Point(bmpimg.Width, bmpimg.Height - 10));
-            bmpgraphics.DrawLine(new Pen(Brushes.Black, 2), new Point(0, bmpimg.Height - 10),
-                new Point(bmpimg.Width, bmpimg.Height - 10));
-            bmpgraphics.DrawString(nazwa, new Font("Times New Roman", 8, FontStyle.Regular), new SolidBrush(Color.Black), new Point(10,4)) ;
-            bmpgraphics.DrawImage(code.CreateDrawingImage(System.Drawing.Color.Black, System.Drawing.Color.White),
-                new Point(10, 20));
-
-            bmpgraphics.DrawString(code.Code, new System.Drawing.Font("Times New Roman", 8, FontStyle.Regular), new SolidBrush(Color.Black), new Point(50, 45));
-            iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(bmpimg, System.Drawing.Imaging.ImageFormat.Png);
-            pdfImage.SetDpi(1200, 1200);
-
-            return pdfImage;
-        }
-
         private static Barcode128 Barcode(string text)
         {
-            Barcode128 code128 = new Barcode128();
-            code128.CodeType = Barcode128.CODE_AC_TO_B;
-            code128.ChecksumText = true;
-            code128.AltText = text;
-            code128.GenerateChecksum = true;
-            code128.StartStopText = true;
-            code128.Code = text;
-            code128.Extended = false;
-            code128.Size = 32;
-            code128.TextAlignment = Element.ALIGN_CENTER;
-            code128.N = (float) 32;
-            code128.X = (float) 32;
-            return code128;
+            Barcode128 code = new Barcode128
+            {
+                ChecksumText = true,
+                AltText = text,
+                GenerateChecksum = true,
+                StartStopText = false,
+                Code = text,
+                Extended = true,
+                Size = 8,
+                TextAlignment = Element.ALIGN_MIDDLE
+            };
+            return code;
         }
 
     }

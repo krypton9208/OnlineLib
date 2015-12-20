@@ -25,7 +25,7 @@ namespace OnlineLib.App.Controllers
         public ActionResult Index(int lib)
         {
             ViewBag.Library = lib;
-            
+
             ViewBag.Sub = _libraryRepository.UserSubscibeLibrary(lib, Guid.Parse(User.Identity.GetUserId()));
 
             return View(_libraryRepository.GetLibraryById(lib));
@@ -34,14 +34,13 @@ namespace OnlineLib.App.Controllers
         [Route("{lib}/Library/SubscribeLibrary")]
         public ActionResult SubscribeLibrary(int lib)
         {
-            Guid userid =Guid.Parse(User.Identity.GetUserId());
+            Guid userid = Guid.Parse(User.Identity.GetUserId());
             if (lib != 0 && userid != Guid.Empty)
             {
                 if (_libraryRepository.Subscribe(lib, userid))
                     return RedirectToAction("Index", "Books", new { @lib = lib });
-
             }
-            return RedirectToAction("Index", "Library", new {@lib = lib});
+            return RedirectToAction("Index", "Library", new { @lib = lib });
         }
 
         // GET: Library
@@ -58,14 +57,12 @@ namespace OnlineLib.App.Controllers
         [Route("Library/Create/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Library library, HttpPostedFileBase file, Guid id)
         {
-
-
             if (file.FileName != null)
             {
                 library.Photo = library.Name + ".jpg";
-
             }
             library.Address = new Address()
             {
@@ -95,15 +92,14 @@ namespace OnlineLib.App.Controllers
         [Route("Library/Search")]
         public ActionResult Search(string search)
         {
-            if (search == string.Empty || search == null)
+            if (string.IsNullOrEmpty(search))
                 return View(_libraryRepository.GetLibraryList);
-            else
-                return
-                    View(
-                        _libraryRepository.GetLibraryList.Where(
-                            x =>
-                                x.Name.Contains(search) || x.Address.City.Contains(search) ||
-                                x.Address.Street.Contains(search)));
+            return
+                View(
+                    _libraryRepository.GetLibraryList.Where(
+                        x =>
+                            x.Name.Contains(search) || x.Address.City.Contains(search) ||
+                            x.Address.Street.Contains(search)));
         }
 
 

@@ -606,6 +606,7 @@
     <Content Include="Views\LibraryManager\EditLibraryText.cshtml" />
     <Content Include="Views\Manage\ProfilEdit.cshtml" />
     <Content Include="Views\LibraryManager\SearchWorker.cshtml" />
+    <Content Include="Views\Books\SelectToPrint.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -335,7 +335,7 @@ namespace OnlineLib.Repository.Repository
 
         public bool UserSubscibeLibrary(int lib, Guid user)
         {
-            if (_db.Users.First(x => x.Id == user).Libraries.Any(x => x.Id == lib))
+            if (_db.Users.First(x => x.Id == user).Libraries.Any(x => x.Id == lib) && !IsLibOwner(user, lib))
             {
                 var library = _db.Library.First(x => x.Id == lib);
                 var User = _db.Users.First(x => x.Id == user);
@@ -375,7 +375,7 @@ namespace OnlineLib.Repository.Repository
             var w = _db.Roles.First(x => x.Name == "Workers");
             var W = _db.Roles.First(x => x.Name == "Main_Workers");
             var o = _db.Roles.First(x => x.Name == "LibOwners");
-            var libUserRole = _db.Users.First(x => x.Id == user).Roles.FirstOrDefault(d => d.WorkPlace.Id == lib);
+            var libUserRole = _db.Users.First(x => x.Id == user).Roles.First(d => d.WorkPlace.Id == lib);
             if (libUserRole != null && (libUserRole.RoleId == w.Id || libUserRole.RoleId == W.Id || libUserRole.RoleId == o.Id))
                 return true;
             return false;
