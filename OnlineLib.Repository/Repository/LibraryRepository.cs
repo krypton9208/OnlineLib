@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.WebPages;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
 using OnlineLib.Repository.ViewModels;
@@ -20,6 +22,51 @@ namespace OnlineLib.Repository.Repository
             _db = db;
         }
 
+        public string GetUserCode(Guid user)
+        {
+            string tt = _db.Users.First(x => x.Id == user).GetUserCode();
+            if (tt.IsEmpty())
+            {
+                tt = GetUniqueKey();
+                _db.Users.First(x => x.Id == user).UserCode = tt;
+                try
+                {
+                    _db.SaveChanges();
+                    return tt;
+                }
+                catch (Exception)
+                {
+                    return String.Empty;
+                    throw;
+                }
+            }
+            return tt;
+        }
+        private string GetUniqueKey()
+        {
+            int maxSize = 16;
+            int minSize = 16;
+            char[] chars = new char[70];
+            const string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*";
+            chars = a.ToCharArray();
+            int size = maxSize;
+            byte[] data = new byte[1];
+            RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
+            crypto.GetNonZeroBytes(data);
+            size = maxSize;
+            data = new byte[size];
+            crypto.GetNonZeroBytes(data);
+            StringBuilder result = new StringBuilder(size);
+            foreach (byte b in data)
+            { result.Append(chars[b % (chars.Length - minSize)]); }
+            return result.ToString();
+        }
+
+        public string GetUserFirstAndSecondName(Guid user)
+        {
+            var t = _db.Users.First(x => x.Id == user);
+            return t.Name + " "+ t.Surname;
+        }
         public LibUser GetUserByGuid(Guid id) => _db.Users.First(x => x.Id == id);
 
         public ICollection<Library> GetLibraryList => _db.Library.ToList();

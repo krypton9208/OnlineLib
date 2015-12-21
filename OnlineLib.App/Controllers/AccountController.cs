@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -70,21 +73,57 @@ namespace OnlineLib.App.Controllers
         public ActionResult DeleteLibrary(int id)
         {
             if (id != null)
-                if (_libraryRepository.RemoveUserFromLibrary( id, Guid.Parse(User.Identity.GetUserId())))
+                if (_libraryRepository.RemoveUserFromLibrary(id, Guid.Parse(User.Identity.GetUserId())))
                     return RedirectToAction("LibraryManager");
             return View("Error");
         }
 
+        [Route("Account/PrintCard")]
+        public ActionResult PrintCard()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(PageSize.A4, 20, 20, 30, 20);
+
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                writer.SetPdfVersion(iTextSharp.text.pdf.PdfWriter.PDF_VERSION_1_7);
+                document.Open();
+                MultiColumnText columns = new MultiColumnText();
+                columns.AddRegularColumns(30f, document.PageSize.Width - 30f, 30f, 3);
+                var namefont = FontFactory.GetFont("Times New Roman", 10);
+                PdfContentByte cb = writer.DirectContent;
+
+                columns.AddElement(new Chunk("OnlineLib UserCard", namefont));
+                columns.AddElement(Chunk.NEWLINE);
+                columns.AddElement(Barcode(_libraryRepository.GetUserCode(Guid.Parse(User.Identity.GetUserId()))).CreateImageWithBarcode(cb, null, null));
+                columns.AddElement(new Chunk(_libraryRepository.GetUserFirstAndSecondName(Guid.Parse(User.Identity.GetUserId())),namefont));
+                document.Add(columns);
+                document.Close();
+                writer.Close();
+                return File(ms.ToArray(), "application/pdf", "UserCard.pdf");
+            }
+        }
+        private static Barcode128 Barcode(string text)
+        {
+            Barcode128 code = new Barcode128
+            {
+                Code = text,
+                ChecksumText = false,
+                GenerateChecksum = false,
+                AltText = String.Empty,
+                StartStopText = false,
+                Extended = false
+            };
+            return code;
+        }
         //
         [Route("Account/Login")]
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
-
         //
         // POST: /Account/Login
         [Route("Account/Login")]

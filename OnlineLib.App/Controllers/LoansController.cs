@@ -19,7 +19,7 @@ namespace OnlineLib.App.Controllers
         }
         // GET: Loans
         [Route("{lib}/Loans/NewLoan")]
-        
+
         public ActionResult NewLoan(int lib)
         {
             if (_loanActivityRepository.CanUserLoansBooks(Guid.Parse(User.Identity.GetUserId()), lib))
@@ -33,17 +33,17 @@ namespace OnlineLib.App.Controllers
 
         [Route("{lib}/Loans/NewLoan")]
         [HttpPost]
-        public ActionResult NewLoan(int lib, int bookid, Guid libUserGuid)
+        public ActionResult NewLoan(int? lib, string bookid, string libUserGuid)
         {
-            if (lib != 0 && bookid != 0 && libUserGuid != Guid.Empty)
+            if (lib != 0 && bookid != string.Empty && libUserGuid != string.Empty)
             {
                 if (_loanActivityRepository.NewLoad(libUserGuid, bookid))
                 {
-                    return RedirectToAction("Index", "Books", new {@lib = lib});
+                    return RedirectToAction("Index", "Books", new { @lib = (int)lib });
                 }
                 return View();
             }
-                return View();
+            return View();
         }
 
         [Route("{lib}/Loans/ReturnBook")]
@@ -55,9 +55,9 @@ namespace OnlineLib.App.Controllers
 
         [Route("{lib}/Loans/ReturnBook")]
         [HttpPost]
-        public ActionResult ReturnBook(int lib, int bookid, Guid libUserGuid)
+        public ActionResult ReturnBook(int lib, string bookid, string libUserGuid)
         {
-            if (lib != 0 && bookid != 0 && libUserGuid != Guid.Empty)
+            if (lib != 0 && bookid != string.Empty && libUserGuid != string.Empty)
             {
                 if (_loanActivityRepository.ReturnLoad(libUserGuid, bookid))
                 {

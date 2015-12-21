@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
 
@@ -11,7 +9,7 @@ namespace OnlineLib.Repository.Repository
 {
     public class LoanActivityRepository : ILoanActivityRepository
     {
-        public readonly OnlineLibDbContext _db;
+        private readonly OnlineLibDbContext _db;
 
         public LoanActivityRepository(OnlineLibDbContext db)
         {
@@ -27,62 +25,55 @@ namespace OnlineLib.Repository.Repository
             List<LibUserRole> k = h.Roles.Where(x => x.WorkPlace.Id == lib).ToList();
             if (k.Count >= 0)
             {
-                foreach (LibUserRole libUserRole in k)
-                {
-                    if ((libUserRole.RoleId == w) || (libUserRole.RoleId == m) || (libUserRole.RoleId == o))
-                        return true;
-                }
+                return k.Any(libUserRole => (libUserRole.RoleId == w) || (libUserRole.RoleId == m) || (libUserRole.RoleId == o));
             }
             return false;
         }
 
 
-        public bool NewLoad(Guid libUserGuid, int bookid)
+        public bool NewLoad(string libUserGuid, string bookid)
         {
-            if (libUserGuid != Guid.Empty && bookid != 0)
+            if (libUserGuid != string.Empty && bookid != string.Empty)
             {
-                LoanActivity loan = new LoanActivity()
+                var loan = new LoanActivity(_db.Book.FirstOrDefault(x => x.ShortId == bookid),
+                    _db.Users.FirstOrDefault(x => x.UserCode == libUserGuid),
+                    DateTime.Today, DateTime.MinValue, DateTime.Today.AddDays(30), false);
+                LibUser user = _db.Users.FirstOrDefault(x => x.UserCode == libUserGuid);
+                Book book = _db.Book.FirstOrDefault(x => x.ShortId == bookid);
+                if (book != null && user != null)
                 {
-                    Book = _db.Book.First(x => x.Id == bookid),
-                    LibUser = _db.Users.First(x => x.Id == libUserGuid),
-                    LoanData = DateTime.Today,
-                    ReturnedData = DateTime.MinValue,
-                    ScheduledReturnData = DateTime.Today.AddDays(30),
-                    Returned = false
-                };
-                LibUser user = _db.Users.First(x => x.Id == libUserGuid);
-                Book book = _db.Book.First(x => x.Id == bookid);
-                loan.LibUser = user;
-                loan.Book = book;
-                book.Lended = true;
-                book.LoadActivity = loan;
-                user.BookedBooks.Add(loan);
-                _db.Book.AddOrUpdate(book);
-                _db.Users.AddOrUpdate(user);
-                _db.LoanActivitie.Add(loan);
-                try
-                {
-                    _db.SaveChanges();
+                    loan.LibUser = user;
+                    loan.Book = book;
+                    book.Lended = true;
+                    book.LoadActivity = loan;
+                    user.BookedBooks.Add(loan);
+                    _db.Book.AddOrUpdate(book);
+                    _db.Users.AddOrUpdate(user);
+                    _db.LoanActivitie.Add(loan);
+                    try
+                    {
+                        _db.SaveChanges();
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                    return true;
                 }
-                catch (Exception)
-                {
-                    return false;
-                    throw;
-                }
-                return true;
+                return false;
+
             }
             return false;
         }
 
-        public bool ReturnLoad(Guid libUserGuid, int bookid)
+        public bool ReturnLoad(string libUserGuid, string bookid)
         {
-            if (libUserGuid != Guid.Empty && bookid != 0)
+            if (libUserGuid != string.Empty && bookid != string.Empty)
             {
-                var t = _db.LoanActivitie.First(x => x.LibUser.Id == libUserGuid && x.Book.Id == bookid);
-                _db.Book.First(x => x.Id == bookid).Lended = false;
-                _db.Book.First(x => x.Id == bookid).LoadActivity = null;
-                _db.Book.First(x => x.Id == bookid).LoadActivity = null;
-                _db.Users.First(x => x.Id == libUserGuid).BookedBooks.Remove(t);
+                var t = _db.LoanActivitie.First(x => x.LibUser.UserCode == libUserGuid && x.Book.ShortId == bookid);
+                _db.Book.First(x => x.ShortId == bookid).Lended = false;
+                _db.Book.First(x => x.ShortId == bookid).LoadActivity = null;
+                _db.Users.First(x => x.UserCode == libUserGuid).BookedBooks.Remove(t);
                 _db.LoanActivitie.Remove(t);
                 try
                 {
@@ -91,7 +82,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return false;
-                    throw;
                 }
                 return true;
             }
@@ -111,7 +101,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return false;
-                    throw;
                 }
                 return true;
             }

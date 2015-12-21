@@ -9,8 +9,8 @@ namespace OnlineLib.Repository.IRepository
 {
     public interface ILoanActivityRepository
     {
-        bool NewLoad(Guid libUserGuid, int bookid);
-        bool ReturnLoad(Guid libUserGuid, int bookid);
+        bool NewLoad(string libUserGuid, string bookid);
+        bool ReturnLoad(string libUserGuid, string bookid);
         bool ExtendSheduledReturnData(Guid libUserGuid, int bookid);
         bool CanUserLoansBooks(Guid user, int lib);
 

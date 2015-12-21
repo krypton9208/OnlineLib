@@ -17,6 +17,8 @@ namespace OnlineLib.Repository.IRepository
         bool UpdateUserEditVieModel(ProfiEditViewModel model);
         bool IsUserWithThisEMail(string email);
         Guid GetUserGuidFromEmail(string email);
+        string GetUserCode(Guid user);
+        string GetUserFirstAndSecondName(Guid user);
         bool UpdateLibrary(Library library);
         bool RemoveLibrary(Library library);
         ICollection<Book> GetAllBooks(int lib);

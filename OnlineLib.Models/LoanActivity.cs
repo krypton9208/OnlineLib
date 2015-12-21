@@ -20,6 +20,17 @@ namespace OnlineLib.Models
         public virtual Book Book { get; set; }
         public virtual LibUser LibUser { get; set; }
 
+        public LoanActivity() { }
+
+        public LoanActivity(Book book, LibUser libuser, DateTime loandata, DateTime returneddata, DateTime sche, bool returner)
+        {
+            Book = book;
+            LibUser = libuser;
+            LoanData = loandata;
+            ReturnedData = returneddata;
+            ScheduledReturnData = sche;
+            Returned = returner;
+        }
     }
 
     public class LoanActivityConfiguration : EntityTypeConfiguration<LoanActivity>
