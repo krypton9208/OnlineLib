@@ -1,26 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using Antlr.Runtime.Misc;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using iTextSharp.text.rtf.style;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
-using Color = System.Drawing.Color;
-using Font = System.Drawing.Font;
-using Image = iTextSharp.text.Image;
-using System.Security.Cryptography;
-using System.Text;
 using OnlineLib.Repository.Repository;
 using OnlineLib.Repository.ViewModels;
 
@@ -32,10 +18,10 @@ namespace OnlineLib.App.Controllers
         private readonly IBooksRepository _booksRepository;
         private readonly ILibraryRepository _libraryRepository;
         // GET: Books
-        public BooksController(IBooksRepository _repository, ILibraryRepository _repo, LibRoleManager _dd)
+        public BooksController(IBooksRepository repository, ILibraryRepository repo)
         {
-            _booksRepository = _repository;
-            _libraryRepository = _repo;
+            _booksRepository = repository;
+            _libraryRepository = repo;
         }
 
 
@@ -64,14 +50,18 @@ namespace OnlineLib.App.Controllers
         [Route("{lib}/Books/Add")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(Book book, int? lib, bool print)
+        public ActionResult Add(Book book, int? lib)
         {
 
             if (ModelState.IsValid && lib != null && _libraryRepository.IsWorker((int)lib, Guid.Parse(User.Identity.GetUserId())))
             {
-                _booksRepository.Add(book, (int)lib);
-                return RedirectToAction("Index", new { @lib = lib });
+                if (_booksRepository.Add(book, (int)lib))
+                    return RedirectToAction("Index", new { @lib = lib });
+                ViewBag.Library = lib;
+                return View(book);
+
             }
+            ViewBag.Library = lib;
             return View(book);
         }
 
@@ -153,8 +143,6 @@ namespace OnlineLib.App.Controllers
                 columns.AddElement(new Chunk(item.GetBookName, namefont));
                 columns.AddElement(Chunk.NEWLINE);
 
-
-
                 document.Add(columns);
                 document.Close();
                 writer.Close();
@@ -164,12 +152,11 @@ namespace OnlineLib.App.Controllers
         }
 
 
-
         [Route("{lib}/Books/SelectToPrint")]
         public ActionResult SelectToPrint(int lib)
         {
             ViewBag.Library = lib;
-            var tt = new List<BookToPrint>();
+            List<BookToPrint> tt;
             tt = _booksRepository.BookToPrint(lib);
             return View(tt);
         }

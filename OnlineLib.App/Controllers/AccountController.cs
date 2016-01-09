@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -25,16 +21,18 @@ namespace OnlineLib.App.Controllers
         private LibSignInManager _signInManager;
         private LibUserManager _userManager;
         private readonly ILibraryRepository _libraryRepository;
+        private readonly ILoanActivityRepository _activityRepository;
         private IAuthenticationManager authManager;
 
 
 
-        public AccountController(LibUserManager userManager, LibSignInManager signInManager, ILibraryRepository repo, IAuthenticationManager _authentication)
+        public AccountController(LibUserManager userManager, LibSignInManager signInManager, ILibraryRepository repo, IAuthenticationManager _authentication, ILoanActivityRepository _loanActivity)
         {
             UserManager = userManager;
             SignInManager = signInManager;
             _libraryRepository = repo;
             authManager = _authentication;
+            _activityRepository = _loanActivity;
         }
 
         public LibSignInManager SignInManager
@@ -116,6 +114,13 @@ namespace OnlineLib.App.Controllers
             };
             return code;
         }
+
+        [Route("Account/BookedBooks")]
+        public ActionResult BookedBooks()
+        {
+            return View(_activityRepository.GetUserActiviciesList(Guid.Parse( User.Identity.GetUserId())));
+        }
+
         //
         [Route("Account/Login")]
         // GET: /Account/Login

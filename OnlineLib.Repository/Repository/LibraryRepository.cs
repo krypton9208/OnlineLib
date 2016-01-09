@@ -5,7 +5,6 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web.WebPages;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
@@ -37,7 +36,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return String.Empty;
-                    throw;
                 }
             }
             return tt;
@@ -46,14 +44,14 @@ namespace OnlineLib.Repository.Repository
         {
             int maxSize = 16;
             int minSize = 16;
+            // ReSharper disable once RedundantAssignment
             char[] chars = new char[70];
             const string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*";
             chars = a.ToCharArray();
-            int size = maxSize;
             byte[] data = new byte[1];
             RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
             crypto.GetNonZeroBytes(data);
-            size = maxSize;
+            int size = maxSize;
             data = new byte[size];
             crypto.GetNonZeroBytes(data);
             StringBuilder result = new StringBuilder(size);
@@ -76,10 +74,6 @@ namespace OnlineLib.Repository.Repository
             return _db.Library.FirstOrDefault(x => x.Id == id);
         }
 
-        public Library GetLibraryByName(string name)
-        {
-            return _db.Library.FirstOrDefault(x => x.Name == name);
-        }
 
         public ProfiEditViewModel GetUserEditViewModel(Guid user)
         {
@@ -109,7 +103,6 @@ namespace OnlineLib.Repository.Repository
             catch (Exception)
             {
                 return false;
-                throw;
             }
             return true;
         }
@@ -140,7 +133,6 @@ namespace OnlineLib.Repository.Repository
             catch (Exception)
             {
                 return false;
-                throw;
             }
             return true;
         }
@@ -162,7 +154,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return false;
-                    throw;
                 }
                 return true;
             }
@@ -181,169 +172,13 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return false;
-                    throw;
                 }
                 return true;
             }
             return false;
         }
 
-        public bool RemoveLibrary(Library library)
-        {
-            if (library != null)
-            {
-                _db.Library.Remove(library);
-                try
-                {
-                    _db.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                    throw;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        //public ICollection<LibUser> GetEmployees(int lib)
-        //{
-        //    Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-        //    return firstOrDefault?.Workers;
-        //}
-
-
-
-
-        public ICollection<Book> GetAllBooks(int lib)
-        {
-            Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-            return firstOrDefault?.Books;
-        }
-
-        public bool AddEmployee(int lib, LibUser employee)
-        {
-            if (lib > 0 && employee != null)
-            {
-                Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                //  if (firstOrDefault?.Workers == null) firstOrDefault.Workers = new List<LibUser>();
-                //  firstOrDefault?.Workers.Add(employee);
-                try
-                {
-                    _db.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                    throw;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        public bool RemoveEmployee(int lib, LibUser employee)
-        {
-            if (lib > 0 && employee != null)
-            {
-                Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                //firstOrDefault?.Workers.Remove(employee);
-                try
-                {
-                    _db.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                    throw;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        public bool AddReaders(int lib, LibUser readers)
-        {
-            if (lib > 0 && readers != null)
-            {
-                Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                // if (firstOrDefault?.Readers == null) firstOrDefault.Readers = new List<LibUser>();
-                //firstOrDefault?.Readers.Add(readers);
-                try
-                {
-                    _db.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                    throw;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        public bool RemoveReaders(int lib, LibUser readers)
-        {
-            if (lib > 0 && readers != null)
-            {
-                Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                // firstOrDefault?.Readers.Remove(readers);
-                try
-                {
-                    _db.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                    throw;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        public bool AddBook(int lib, Book book)
-        {
-            if (lib > 0 && book != null)
-            {
-                Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                firstOrDefault?.Books.Add(book);
-                try
-                {
-                    _db.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                    throw;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        public bool RemoveBook(int lib, Book book)
-        {
-            if (lib > 0 && book != null)
-            {
-                Library firstOrDefault = _db.Library.FirstOrDefault(x => x.Id == lib);
-                firstOrDefault?.Books.Remove(book);
-                try
-                {
-                    _db.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                    throw;
-                }
-                return true;
-            }
-            return false;
-        }
-
+       
         public bool Subscribe(int lib, Guid id)
         {
             if (lib > 0 && id != Guid.Empty)
@@ -364,7 +199,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return false;
-                    throw;
                 }
                 return true;
             }
@@ -375,22 +209,18 @@ namespace OnlineLib.Repository.Repository
         {
         }
 
-        public void SaveChanges()
-        {
-            _db.SaveChanges();
-        }
+   
 
         public bool UserSubscibeLibrary(int lib, Guid user)
         {
             if (_db.Users.First(x => x.Id == user).Libraries.Any(x => x.Id == lib) && !IsLibOwner(user, lib))
             {
                 var library = _db.Library.First(x => x.Id == lib);
-                var User = _db.Users.First(x => x.Id == user);
-                library.LibUsers.Remove(User);
-                User.Libraries.Remove(library);
+                library.LibUsers.Remove(_db.Users.First(x => x.Id == user));
+                _db.Users.First(x => x.Id == user).Libraries.Remove(library);
                 if (library.Workers.First(x=>x.UserId == user) != null)
-                library.Workers.Remove(User.Roles.First(x=>x.WorkPlace.Id == lib));
-                _db.Users.AddOrUpdate(User);
+                library.Workers.Remove(_db.Users.First(x => x.Id == user).Roles.First(x => x.WorkPlace.Id == lib));
+                _db.Users.AddOrUpdate(_db.Users.First(x => x.Id == user));
                 _db.Library.AddOrUpdate(library);
                 try
                 {
@@ -399,7 +229,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return false;
-                    throw;
                 }
                 return true;
             }
@@ -420,12 +249,10 @@ namespace OnlineLib.Repository.Repository
         public bool IsWorker(int lib, Guid user)
         {
             var w = _db.Roles.First(x => x.Name == "Workers");
-            var W = _db.Roles.First(x => x.Name == "Main_Workers");
+            var mw = _db.Roles.First(x => x.Name == "Main_Workers");
             var o = _db.Roles.First(x => x.Name == "LibOwners");
             var libUserRole = _db.Users.First(x => x.Id == user).Roles.First(d => d.WorkPlace.Id == lib);
-            if (libUserRole != null && (libUserRole.RoleId == w.Id || libUserRole.RoleId == W.Id || libUserRole.RoleId == o.Id))
-                return true;
-            return false;
+            return libUserRole != null && (libUserRole.RoleId == w.Id || libUserRole.RoleId == mw.Id || libUserRole.RoleId == o.Id);
         }
     }
 }

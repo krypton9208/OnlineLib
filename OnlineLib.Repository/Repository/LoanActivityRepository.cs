@@ -88,11 +88,16 @@ namespace OnlineLib.Repository.Repository
             return false;
         }
 
-        public bool ExtendSheduledReturnData(Guid libUserGuid, int bookid)
+        public List<LoanActivity> GetUserActiviciesList(Guid user)
         {
-            if (libUserGuid != Guid.Empty && bookid != 0)
+            return _db.LoanActivitie.Where(x => x.LibUser.Id == user && x.Returned == false).ToList();
+        }
+
+        public bool ExtendSheduledReturnData(int bookid)
+        {
+            if ( bookid != 0)
             {
-                _db.LoanActivitie.First(x => x.LibUser.Id == libUserGuid && x.Book.Id == bookid).ScheduledReturnData =
+                _db.LoanActivitie.First(x => x.Book.Id == bookid).ScheduledReturnData =
                     DateTime.Now.AddDays(30);
                 try
                 {

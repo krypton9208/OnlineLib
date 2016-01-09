@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OnlineLib.Models;
 
 namespace OnlineLib.Repository.IRepository
@@ -11,7 +8,8 @@ namespace OnlineLib.Repository.IRepository
     {
         bool NewLoad(string libUserGuid, string bookid);
         bool ReturnLoad(string libUserGuid, string bookid);
-        bool ExtendSheduledReturnData(Guid libUserGuid, int bookid);
+        List<LoanActivity> GetUserActiviciesList(Guid user); 
+        bool ExtendSheduledReturnData( int bookid);
         bool CanUserLoansBooks(Guid user, int lib);
 
     }

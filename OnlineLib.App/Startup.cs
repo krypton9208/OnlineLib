@@ -1,14 +1,10 @@
 ﻿using System;
-using System.IO.MemoryMappedFiles;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.Owin;
-using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
-using OnlineLib.App.Controllers;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
 using OnlineLib.Repository.Repository;

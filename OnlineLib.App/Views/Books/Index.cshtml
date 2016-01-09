@@ -17,7 +17,11 @@
     <div>
         @if (ViewBag.Worker)
         {
-            @Html.ActionLink("Add new book", "Add", "Books", new object(), new { @lib = ViewBag.Library, @class = "btn btn-primary" })
+            @Html.ActionLink("Add new book", "Add", "Books", new { @lib = ViewBag.Library }, new {  @class = "btn btn-primary" })
+            @Html.ActionLink("Print labels", "SelectToPrint", "Books", new { @lib = ViewBag.Library }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Return Book", "ReturnBook", "Loans", new { @lib = ViewBag.Library }, new { @class = "btn btn-primary pull-right" })
+            @Html.ActionLink("Loan Book", "NewLoan", "Loans", new { @lib = ViewBag.Library }, new { @class = "btn btn-primary pull-right" })
+
         }
      
     </div>
@@ -57,12 +61,12 @@
             <td>
                 @if (ViewBag.Worker)
                 {
-                    @Html.ActionLink("Edit", "Edit", "Books", new { id = item.Id}, new { id = item.Id, @class = "btn btn-sm btn-default" })
-                    @Html.ActionLink("Drukuj", "PdfGeneratorBook", "Books", new { id = item.Id }, new { id = item.Id, @class = "btn btn-sm btn-success" })
+                    @Html.ActionLink("Edit", "Edit", "Books", new { id = item.Id}, new { @class = "btn btn-sm btn-default" })
+                    @Html.ActionLink("Drukuj", "PdfGeneratorBook", "Books", new { id = item.Id }, new { @class = "btn btn-sm btn-success" })
 
-                    @Html.ActionLink("Delete", "Delete", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-danger" })
+                    @Html.ActionLink("Delete", "Delete", "Books", new { @id = item.Id }, new {  @class = "btn btn-sm btn-danger" })
                 }
-                @Html.ActionLink("Zarezerwuj", "Index", "Books", new object(), new { id = item.Id, @class = "btn btn-sm btn-info" })
+                @Html.ActionLink("Loan", "NewLoan", "Loans", new {@bookid = item.ShortId}, new { @class = "btn btn-sm btn-info" })
             </td>
         </tr>
     }

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc.Html;
 using OnlineLib.Models;
 using OnlineLib.Repository.IRepository;
 using OnlineLib.Repository.ViewModels;
@@ -15,7 +12,12 @@ namespace OnlineLib.Repository.Repository
 {
     public class BooksRepository : IBooksRepository
     {
-        private readonly OnlineLibDbContext _db = new OnlineLibDbContext();
+        private readonly OnlineLibDbContext _db;
+
+        public BooksRepository(OnlineLibDbContext db)
+        {
+            _db = db;
+        }
 
         public ICollection<Book> GetBooks(int lib)
         {
@@ -56,6 +58,7 @@ namespace OnlineLib.Repository.Repository
                 dd.Isbn = book.Isbn;
                 dd.Lended = book.Lended;
                 dd.LoadActivity = book.LoadActivity;
+                dd.ShortId = book.ShortId;
                 _db.Entry(dd).State = EntityState.Modified;
                 try
                 {
@@ -64,7 +67,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return false;
-                    throw;
                 }
                 return true;
             }
@@ -86,7 +88,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return false;
-                    throw;
                 }
                 return true;
             }
@@ -102,7 +103,6 @@ namespace OnlineLib.Repository.Repository
             catch (Exception)
             {
                 return false;
-                throw;
             }
             return true;
         }
@@ -147,7 +147,6 @@ namespace OnlineLib.Repository.Repository
                     
                     result.Add(new BookLabel(temp.Library.Name, GetUniqueKey(), temp.Title));
                 }
-                continue;
             }
             try
             {
@@ -155,11 +154,9 @@ namespace OnlineLib.Repository.Repository
             }
             catch (Exception)
             {
-                
-                throw;
+                return null;
             }
             return result;
-
         }
 
 
@@ -178,7 +175,6 @@ namespace OnlineLib.Repository.Repository
                 catch (Exception)
                 {
                     return new BookLabel();
-                    throw;
                 }
                 return label;
             }
@@ -189,14 +185,14 @@ namespace OnlineLib.Repository.Repository
         {
             int maxSize = 13;
             int minSize = 13;
+            // ReSharper disable once RedundantAssignment
             char[] chars = new char[70];
             const string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*";
             chars = a.ToCharArray();
-            int size = maxSize;
             byte[] data = new byte[1];
             RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
             crypto.GetNonZeroBytes(data);
-            size = maxSize;
+            int size = maxSize;
             data = new byte[size];
             crypto.GetNonZeroBytes(data);
             StringBuilder result = new StringBuilder(size);
@@ -207,9 +203,9 @@ namespace OnlineLib.Repository.Repository
 
         public class BookLabel
         {
-           private string LibraryName { get; set; }
-           private string Code { get; set; }
-           private string BookName { get; set; }
+           private string LibraryName { get; }
+           private string Code { get;  }
+           private string BookName { get;  }
 
             public BookLabel() { }
 
@@ -224,14 +220,5 @@ namespace OnlineLib.Repository.Repository
             public string GetCode => Code;
             public string GetBookName => BookName;
         }
-
-        //public override bool Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        _db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
     }
 }

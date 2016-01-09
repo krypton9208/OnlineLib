@@ -2,28 +2,36 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
+<div class="jumbotron formbox">
     <h1>OnlineLib</h1>
     <p class="lead">Allows you to searching libraries and books nearest you as is as only possible in ONE place </p>
    @* <p>@Html.ActionLink("Search", "Search", "Library", new object(), new {@class = "btn btn-primary btn-lg"})</p>*@
 </div>
 
-<div class="row">
+<div class="row" id="welcome">
     <div class="col-md-4">
-        <h2>Library owner?</h2>
-        <p>
-            This Web Application allow you to have own Library system, with own Web Page for free. You need only to Create now Library.
-        </p>
-        <p>@Html.ActionLink("Create", "Create", "Library",new object(), new {@class = "btn btn-default"})</p>
+        <div class="formbox">
+            <h2>Library owner?</h2>
+            <p>
+                This Web Application allow you to have own Library system, with own Web Page for free. You need only to Create now Library.
+            </p>
+            <p>@Html.ActionLink("Create", "Create", "Library", new object(), new { @class = "btn btn-default btn-block" })</p>    
+        </div>
     </div>
     <div class="col-md-4">
-        <h2>Only reader?</h2>
-        <p>Create Yours free account to discover new place to Booking no Books in One Place !</p>
-        <p>@Html.ActionLink("Register", "Register", "Account", new object(), new { @class = "btn btn-default" })</p>
+        <div class="formbox">
+            <h2>Only reader?</h2>
+            <p>Create Yours free account to discover new place to Booking no Books in One Place !</p>
+            <p>@Html.ActionLink("Register", "Register", "Account", new object(), new { @class = "btn btn-default btn-block" })</p>
+        </div>
+       
     </div>
     <div class="col-md-4">
-        <h2>You Have account?</h2>
-        <p>Thats only what You need to start traverl in Books Worls! You need only find Library.</p>
-        <p>@Html.ActionLink("Search", "Search", "Library", new object(), new { @class = "btn btn-default" })</p>
+        <div class="formbox">
+            <h2>You Have account?</h2>
+            <p>Thats only what You need to start traverl in Books Worls! You need only find Library.</p>
+            <p>@Html.ActionLink("Search", "Search", "Library", new object(), new { @class = "btn btn-default btn-block" })</p>
+        </div>
+        
     </div>
 </div>

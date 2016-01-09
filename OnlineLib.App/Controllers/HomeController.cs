@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace OnlineLib.App.Controllers
 {
@@ -14,13 +10,7 @@ namespace OnlineLib.App.Controllers
         {
             return View();
         }
-        [Route("~/About")]
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
 
-            return View();
-        }
 
         [Route("~/Contact")]
         public ActionResult Contact()

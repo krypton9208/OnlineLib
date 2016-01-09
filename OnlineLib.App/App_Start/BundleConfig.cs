@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace OnlineLib.App
 {
@@ -10,7 +9,10 @@ namespace OnlineLib.App
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
-
+            bundles.Add(new ScriptBundle("~/bundles/CodeScanner").Include(
+                      "~/Scripts/CodeScanner.js"));
+            bundles.Add(new ScriptBundle("~/bundles/librarycreate").Include(
+                      "~/Scripts/librarycreate.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 

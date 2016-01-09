@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Windows.Forms;
 using OnlineLib.Models;
 using OnlineLib.Repository.ViewModels;
 using OnlineLib.Repository.IRepository;
@@ -66,7 +63,6 @@ namespace OnlineLib.Repository.Repository
                     catch (Exception)
                     {
                         return false;
-                        throw;
                     }
 
                     return true;
@@ -98,16 +94,15 @@ namespace OnlineLib.Repository.Repository
             {
                 ICollection<ListWorkersViewModel> list = new HashSet<ListWorkersViewModel>();
                 var w = _db.Roles.First(x => x.Name == "Workers");
-                var W = _db.Roles.First(x => x.Name == "Main_Workers");
+                var mw = _db.Roles.First(x => x.Name == "Main_Workers");
 
                 var workers = _db.Users.Where(
                     x =>
                         x.Roles.FirstOrDefault(d => d.WorkPlace.Id == lib).RoleId == w.Id ||
-                        x.Roles.FirstOrDefault(o => o.WorkPlace.Id == lib).RoleId == W.Id).ToList();
+                        x.Roles.FirstOrDefault(o => o.WorkPlace.Id == lib).RoleId == mw.Id).ToList();
                 foreach (LibUser user in workers)
                 {
-                    var role = "";
-                    role = user.Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == w.Id) > 0
+                    var role = user.Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == w.Id) > 0
                         ? "Workers"
                         : "Main_Workers";
                     list.Add(new ListWorkersViewModel()
@@ -126,9 +121,8 @@ namespace OnlineLib.Repository.Repository
         {
             var p = _db.Users.First(x => x.Id == user);
             var w = _db.Roles.First(x => x.Name == "Workers");
-            var role = "";
 
-            role = p.Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == w.Id) > 0 ? "Workers" : "Main_Workers";
+            var role = p.Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == w.Id) > 0 ? "Workers" : "Main_Workers";
 
 
             var tem = new ListWorkersViewModel()
@@ -144,15 +138,7 @@ namespace OnlineLib.Repository.Repository
 
         public IEnumerable<SelectListItem> GetRoles()
         {
-
-            var dd = new List<SelectListItem>();
-            foreach (var role in _db.Roles)
-            {
-                if (role.Name == "Workers" || role.Name == "Main_Workers")
-                    dd.Add(new SelectListItem() {Text = role.Name, Value = role.Name});
-            }
-            return dd;
-
+            return (from role in _db.Roles where role.Name == "Workers" || role.Name == "Main_Workers" select new SelectListItem() {Text = role.Name, Value = role.Name}).ToList();
         }
     }
 }

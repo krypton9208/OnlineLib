@@ -1,32 +1,34 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("OnlineLib", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+<body id="librarycreate">
+    <!--@((ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString()+ViewContext.Controller.ValueProvider.GetValue("action").RawValue.ToString()).ToLower().Trim())-->
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("OnlineLib", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
 
-                    <li>@Html.ActionLink("Search", "Search", "Library")</li>
-                    @if (Request.IsAuthenticated)
-                    {
-                        <li>
+
+                        @if (Request.IsAuthenticated)
+                        {
+                            <li>@Html.ActionLink("Search", "Search", "Library")</li>
+                            <li>
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     Manage
                                     <span class="caret"></span>
@@ -35,27 +37,30 @@
                                     <li>@Html.ActionLink("Security", "Index", "Manage")</li>
                                     <li>@Html.ActionLink("Profil", "ProfilEdit", "Manage")</li>
                                     <li>@Html.ActionLink("Libraries", "LibraryManager", "Account")</li>
+                                    <li>@Html.ActionLink("Booked Books", "BookedBooks", "Account")</li>
 
                                 </ul>
                             </li>
 
-                    }
-                   
-                </ul>
-                @Html.Partial("_LoginPartial")
+                        }
+
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+        <div class="container body-content">
+            @RenderBody()
+        </div>
+
+    <footer class="navbar navbar-inverse navbar-fixed-bottom">
+        <div class="container">
+            <p class="navbar-text">&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+    </body>
 </html>
