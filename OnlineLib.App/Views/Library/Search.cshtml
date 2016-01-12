@@ -5,7 +5,7 @@
 }
 
 <h2>Search</h2>
- <div class="row">
+<div class="row">
     @using (@Html.BeginForm())
     {
 
@@ -16,9 +16,9 @@
                 </div>
                 <div class="col-xs-3">
                     <button type="submit" class="btn-block btn btn-primary">Search</button>
-                </div>    
+                </div>
             </div>
-            
+
         </div>
     }
     <div class="col-sm-12 formbox">
@@ -28,10 +28,12 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Name)
                     </th>
-                    <th colspan="2">
+                    <th>
                         @Html.DisplayNameFor(model => model.Address.City)
                     </th>
-
+                    <th>
+                        Street
+                    </th>
                 </tr>
             </thead>
             <tbody>

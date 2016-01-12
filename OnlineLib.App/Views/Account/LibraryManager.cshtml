@@ -7,46 +7,52 @@
 <h2>User libraries</h2>
 
 <p>
-    @Html.ActionLink("Search new Library", "Search", "Library", new object(),new {@class="btn-default"})
+    @Html.ActionLink("Search new Library", "Search", "Library", new object(), new { @class = " btn btn-default" })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
+<div class="formbox col-sm-12">
 
-        <th>
-            @Html.DisplayNameFor(model => model.Address.City)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address.Street)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address.Number)
-        </th>
-        <th>
-            Actions 
-        </th>
-    </tr>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-           @Html.ActionLink( item.Name,"Index", "Books", new { lib = item.Id}, null)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Address.City)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Address.Street)
-        </td>
-        <td>
-            @Html.DisplayFor(x => item.Address.Number)
-        </td>
-        <td>
-            @Html.ActionLink("UnScribe", "DeleteLibrary",new {@id = item.Id}, new { id=item.Id, @class="btn btn-warning" })
-        </td>
-    </tr>
-}
-
-</table>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address.City)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address.Street)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address.Number)
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.Name, "Index", "Books", new { lib = item.Id }, null)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => item.Address.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => item.Address.Street)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => item.Address.Number)
+                    </td>
+                    <td>
+                        @Html.ActionLink("UnScribe", "DeleteLibrary", new { @id = item.Id }, new { id = item.Id, @class = "btn btn-warning" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

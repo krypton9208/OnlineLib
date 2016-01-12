@@ -3,17 +3,15 @@
 @{
     ViewBag.Title = "Add";
 }
-
-<h2>Add</h2>
+>
 
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>Book</h4>
-        <hr />
+    <div class="form-horizontal col-sm-8 formbox" style="padding-top: 40px; padding-right: 40px">
+      
         <input type="hidden" id="lib" name="lib" value="@ViewBag.Library" />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -42,15 +40,16 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Add new book" class="btn btn-block btn-primary"/>
             </div>
+        </div>
+
+        <div>
+            @Html.ActionLink("Cancel", "Index", new object(), new {@class="btn  btn-default"})
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

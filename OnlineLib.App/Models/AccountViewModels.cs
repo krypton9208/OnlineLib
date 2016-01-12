@@ -64,10 +64,10 @@ namespace OnlineLib.App.Models
 
     public class RegisterViewModel
     {
-        [Display(Name = "Imie: ")]
+        [Display(Name = "Name: ")]
         public string Name { get; set; }
 
-        [Display(Name = "Nazwisko: ")]
+        [Display(Name = "Surname: ")]
         public string Surname { get; set; }
 
         [Required]
@@ -78,11 +78,11 @@ namespace OnlineLib.App.Models
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Hasło: ")]
+        [Display(Name = "Password: ")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Powtórz hasło: ")]
+        [Display(Name = "Repeat password: ")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }

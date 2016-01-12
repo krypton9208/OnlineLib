@@ -156,9 +156,7 @@ namespace OnlineLib.App.Controllers
         public ActionResult SelectToPrint(int lib)
         {
             ViewBag.Library = lib;
-            List<BookToPrint> tt;
-            tt = _booksRepository.BookToPrint(lib);
-            return View(tt);
+            return View(_booksRepository.BookToPrint(lib));
         }
 
         [Route("{lib}/Books/SelectToPrint")]
@@ -172,7 +170,9 @@ namespace OnlineLib.App.Controllers
             {
                 if (item.Print) t.Add(item.Book.Id);
             }
-            return PdfGeneratorBooks(t, lib);
+            if (t.Count > 0)
+                return PdfGeneratorBooks(t, lib);
+            return RedirectToAction("Index", new { @lib = lib });
         }
 
         [Route("{lib}/Books/PdfGeneratorBooks/{id}")]

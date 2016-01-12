@@ -4,12 +4,11 @@
     ViewBag.Title = "Index";
 }
 
-<div>
-    <hr/>
+<div class="row">
     <h2>@Html.DisplayFor(model => model.Name)</h2>
-    <div class="">
-        <img src="../../Image/@Model.Photo" width="350" class="top-right" />
-        
+    <div class="formbox col-sm-6 row">
+        <img src="../../Image/@Model.Photo"  border="2px" width="350"/>
+
         @if (!ViewBag.Sub)
         {
             @Html.ActionLink("Subscribe", "SubscribeLibrary", new object {}, new {@lib = Model.Id, @class = "btn btn-primary btn-lg "})
@@ -51,9 +50,9 @@
             </dd>
         </dl>
     </div>
+    <br />
     <br/>
-        <hr/>
-    <div>
+    <div class="formbox col-sm-offset-6" >
         @Html.Raw(Model.Text)
     </div>
 

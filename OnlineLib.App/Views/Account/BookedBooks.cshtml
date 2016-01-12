@@ -4,44 +4,50 @@
     ViewBag.Title = "BookedBooks";
 }
 
-<h2>BookedBooks</h2>
+<h2>Booked Books</h2>
 
 
-<table class="table">
-    <tr>
-        <th>
-            Date of Loan
-        </th>
-        <th>
-            Date to Return
-        </th>
-        <th>
-            Title
-        </th>
-        <th>
-            Library Name
-        </th>
-        <th></th>
-    </tr>
+<div class="formbox">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Date of Loan
+                </th>
+                <th>
+                    Date of Return
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Library Name
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LoanData)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ScheduledReturnData)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelitem => item.Book.Title)
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Book.Library.Name, "Index", "Library", new { lib = item.Book.Library.Id }, null)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Extend", "Extend", "Loans", new { @lib = item.Book.Library.Id, @bookid = item.Book.Id }, new { @class = "btn btn-primary" })
+                    </td>
+                </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.LoanData)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ScheduledReturnData)
-        </td>
-        <td>
-            @Html.DisplayFor(modelitem => item.Book.Title)
-        </td>
-        <td>
-            @Html.ActionLink(item.Book.Library.Name, "Index", "Library", new { lib = item.Book.Library.Id }, null)
-        </td>
-        <td>
-            @Html.ActionLink("Extend", "Extend", "Loans",new {@lib = item.Book.Library.Id, @bookid = item.Book.Id}, new { @class="btn btn-primary" })
-        </td>
-    </tr>
-}
-
-</table>
+            }
+        </tbody>
+    </table>
+</div>
