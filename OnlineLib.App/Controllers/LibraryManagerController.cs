@@ -165,12 +165,12 @@ namespace OnlineLib.App.Controllers
         [HttpPost]
         public ActionResult SearchWorker(int lib, string email)
         {
-            if (_libraryRepository.IsUserWithThisEMail(email))
+            if (_libraryRepository.IsUserWithThisEMail(email) && email != User.Identity.GetUserName() && !_libraryRepository.IsWorker(email, lib))
             {
                 if (_libManagerRepository.ChangeUserToWorker(lib, _libraryRepository.GetUserGuidFromEmail(email)))
                     return RedirectToAction("Index", new {@lib = lib});
             }
-            ViewBag.StatusMessage = "email not found";
+            ViewBag.StatusMessage = "This user can't be worker in this library";
             ViewBag.Library = lib;
             return View();
         }

@@ -63,7 +63,7 @@ namespace OnlineLib.Repository.Repository
         public string GetUserFirstAndSecondName(Guid user)
         {
             var t = _db.Users.First(x => x.Id == user);
-            return t.Name + " "+ t.Surname;
+            return t.Name + " " + t.Surname;
         }
         public LibUser GetUserByGuid(Guid id) => _db.Users.First(x => x.Id == id);
 
@@ -94,7 +94,7 @@ namespace OnlineLib.Repository.Repository
             var tuser = _db.Users.First(x => x.Id == model.Id);
             tuser.Name = model.Name;
             tuser.Surname = model.Surname;
-           
+
             _db.Users.AddOrUpdate(tuser);
             try
             {
@@ -109,7 +109,7 @@ namespace OnlineLib.Repository.Repository
 
         public bool IsUserWithThisEMail(string email)
         {
-            if (_db.Users.First(x => x.Email == email) != null)
+            if (_db.Users.Count(x => x.Email == email) > 0)
                 return true;
             return false;
         }
@@ -178,7 +178,7 @@ namespace OnlineLib.Repository.Repository
             return false;
         }
 
-       
+
         public bool Subscribe(int lib, Guid id)
         {
             if (lib > 0 && id != Guid.Empty)
@@ -209,7 +209,10 @@ namespace OnlineLib.Repository.Repository
         {
         }
 
-   
+        public bool IsWorker(string email, int lib)
+        {
+            return IsWorker(lib, GetUserGuidFromEmail(email));
+        }
 
         public bool UserSubscibeLibrary(int lib, Guid user)
         {
@@ -218,8 +221,8 @@ namespace OnlineLib.Repository.Repository
                 var library = _db.Library.First(x => x.Id == lib);
                 library.LibUsers.Remove(_db.Users.First(x => x.Id == user));
                 _db.Users.First(x => x.Id == user).Libraries.Remove(library);
-                if (library.Workers.First(x=>x.UserId == user) != null)
-                library.Workers.Remove(_db.Users.First(x => x.Id == user).Roles.First(x => x.WorkPlace.Id == lib));
+                if (library.Workers.First(x => x.UserId == user) != null)
+                    library.Workers.Remove(_db.Users.First(x => x.Id == user).Roles.First(x => x.WorkPlace.Id == lib));
                 _db.Users.AddOrUpdate(_db.Users.First(x => x.Id == user));
                 _db.Library.AddOrUpdate(library);
                 try
@@ -239,7 +242,7 @@ namespace OnlineLib.Repository.Repository
         {
             if (user != Guid.Empty && lib != 0)
             {
-                if (_db.Users.First(x => x.Id == user).Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == _db.Roles.First(w => w.Name == "LibOwners").Id) == 1)
+                if (_db.Users.First(x => x.Id == user).Roles.Count(x => x.WorkPlace.Id == lib && x.RoleId == _db.Roles.First(w => w.Name == "LibOwners").Id) >0)
                     return true;
                 return false;
             }
@@ -251,8 +254,13 @@ namespace OnlineLib.Repository.Repository
             var w = _db.Roles.First(x => x.Name == "Workers");
             var mw = _db.Roles.First(x => x.Name == "Main_Workers");
             var o = _db.Roles.First(x => x.Name == "LibOwners");
-            var libUserRole = _db.Users.First(x => x.Id == user).Roles.First(d => d.WorkPlace.Id == lib);
-            return libUserRole != null && (libUserRole.RoleId == w.Id || libUserRole.RoleId == mw.Id || libUserRole.RoleId == o.Id);
+            if (_db.Users.First(x => x.Id == user).Roles.Count(d => d.WorkPlace.Id == lib) > 0)
+            {
+                var libUserRole = _db.Users.First(x => x.Id == user).Roles.First(d => d.WorkPlace.Id == lib);
+                return libUserRole != null && (libUserRole.RoleId == w.Id || libUserRole.RoleId == mw.Id || libUserRole.RoleId == o.Id);
+            }
+            return false;
         }
+
     }
 }
