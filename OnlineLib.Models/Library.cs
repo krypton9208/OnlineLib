@@ -16,14 +16,12 @@ namespace OnlineLib.Models
         public virtual ICollection<LibUserRole> Workers { get; set; }
         [DataType(DataType.MultilineText)]
         public string Text { get; set; }
-
         public Library()
         {
             Books = new HashSet<Book>();
             LibUsers = new HashSet<LibUser>();
             Workers = new HashSet<LibUserRole>();
         }
-
     }
     
     public class LibraryConfiguration : EntityTypeConfiguration<Library>

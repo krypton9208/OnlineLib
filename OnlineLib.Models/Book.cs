@@ -34,6 +34,4 @@ namespace OnlineLib.Models
             ToTable("Books");
         }
     }
-
-
 }

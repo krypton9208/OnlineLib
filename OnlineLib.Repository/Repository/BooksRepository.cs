@@ -166,7 +166,7 @@ namespace OnlineLib.Repository.Repository
             {
                 var temp = _db.Book.First(x => x.Id == book);
 
-                var label = new BookLabel(temp.Library.Name, GetUniqueKey(), temp.Title);
+                var label = new BookLabel(temp.Library.Name, temp.Id.ToString("D13"), temp.Title);
                 _db.Book.First(x => x.Id == book).ShortId = label.GetCode;
                 try
                 {

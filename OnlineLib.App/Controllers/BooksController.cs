@@ -223,7 +223,7 @@ namespace OnlineLib.App.Controllers
                 ChecksumText = true,
                 AltText = text,
                 GenerateChecksum = true,
-                StartStopText = false,
+                StartStopText = true,
                 Code = text,
                 Extended = true,
                 Size = 8,

@@ -14,9 +14,7 @@ namespace OnlineLib.Models
         public DbSet<Address> Address { get; set; }
         public DbSet<LoanActivity> LoanActivitie { get; set; }
         public OnlineLibDbContext()
-        : base("DefaultConnection")
-    {
-        }
+        : base("DefaultConnection"){}
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -42,6 +40,5 @@ namespace OnlineLib.Models
         {
             return new OnlineLibDbContext();
         }
-
     }
 }

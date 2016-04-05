@@ -15,6 +15,5 @@ namespace OnlineLib.Repository.IRepository
         BooksRepository.BookLabel GenerateCodeToPrint(int id);
         List<BooksRepository.BookLabel> GenerateCodeToPrint(List<int> lista);
         List<BookToPrint> BookToPrint(int lib);
-        //bool Dispose(bool disposing);
     }
 }
