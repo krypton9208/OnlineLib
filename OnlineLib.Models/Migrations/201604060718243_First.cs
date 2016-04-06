@@ -1,5 +1,6 @@
 namespace OnlineLib.Models.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
     public partial class First : DbMigration
@@ -42,6 +43,7 @@ namespace OnlineLib.Models.Migrations
                         Lended = c.Boolean(name: "Lended: "),
                         Isbn = c.String(name: "Isbn: ", maxLength: 16),
                         LibraryId = c.Int(nullable: false),
+                        ShortGuid = c.String(name: "ShortGuid: "),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Library", t => t.LibraryId, cascadeDelete: true)
@@ -52,9 +54,9 @@ namespace OnlineLib.Models.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
-                        LoanData = c.DateTime(nullable: false),
-                        ReturnedData = c.DateTime(),
-                        ScheduledReturnData = c.DateTime(nullable: false),
+                        LoanData = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        ReturnedData = c.DateTime(precision: 7, storeType: "datetime2"),
+                        ScheduledReturnData = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         Returned = c.Boolean(),
                         Text = c.String(maxLength: 150),
                         BookId = c.Int(nullable: false),
@@ -73,7 +75,7 @@ namespace OnlineLib.Models.Migrations
                         Id = c.Guid(nullable: false, identity: true),
                         Imie = c.String(name: "Imie: ", nullable: false, maxLength: 30),
                         Nazwisko = c.String(name: "Nazwisko: ", nullable: false, maxLength: 30),
-                        AdresId = c.Guid(nullable: false),
+                        UserCode = c.String(),
                         Email = c.String(name: "Email: ", nullable: false, maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
@@ -85,12 +87,9 @@ namespace OnlineLib.Models.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
-                        Adress_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Addresses", t => t.Adress_Id)
-                .Index(t => t.UserName, unique: true, name: "UserNameIndex")
-                .Index(t => t.Adress_Id);
+                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -123,12 +122,15 @@ namespace OnlineLib.Models.Migrations
                     {
                         UserId = c.Guid(nullable: false),
                         RoleId = c.Guid(nullable: false),
+                        Library = c.Int(),
                     })
                 .PrimaryKey(t => new { t.UserId, t.RoleId })
+                .ForeignKey("dbo.Library", t => t.Library)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
                 .Index(t => t.UserId)
-                .Index(t => t.RoleId);
+                .Index(t => t.RoleId)
+                .Index(t => t.Library);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -160,22 +162,22 @@ namespace OnlineLib.Models.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.LoanActivities", "LibUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserRoles", "Library", "dbo.Library");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.LibUserLibrary", "Library_Id", "dbo.Library");
             DropForeignKey("dbo.LibUserLibrary", "LibUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUsers", "Adress_Id", "dbo.Addresses");
             DropForeignKey("dbo.LoanActivities", "BookId", "dbo.Books");
             DropForeignKey("dbo.Books", "LibraryId", "dbo.Library");
             DropForeignKey("dbo.Addresses", "Id", "dbo.Library");
             DropIndex("dbo.LibUserLibrary", new[] { "Library_Id" });
             DropIndex("dbo.LibUserLibrary", new[] { "LibUser_Id" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.AspNetUserRoles", new[] { "Library" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", new[] { "Adress_Id" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.LoanActivities", new[] { "LibUserId" });
             DropIndex("dbo.LoanActivities", new[] { "BookId" });

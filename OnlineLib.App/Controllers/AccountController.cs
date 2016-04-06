@@ -70,7 +70,7 @@ namespace OnlineLib.App.Controllers
         [Route("Account/DeleteLibrary/{id}")]
         public ActionResult DeleteLibrary(int id)
         {
-            if (id != null)
+            if (id != 0)
                 if (_libraryRepository.RemoveUserFromLibrary(id, Guid.Parse(User.Identity.GetUserId())))
                     return RedirectToAction("LibraryManager");
             return View("Error");

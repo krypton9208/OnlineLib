@@ -2,6 +2,7 @@
 using System.Web.Optimization;
 using System.Web.Routing;
 using OnlineLib.App.App_Start;
+using FluentValidation.Mvc;
 
 namespace OnlineLib.App
 {
@@ -14,6 +15,7 @@ namespace OnlineLib.App
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AutoMapperConfig.RegisterMappings();
+            FluentValidationModelValidatorProvider.Configure();
         }
     }
 }
